@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CarSharingBaseModule } from './car-sharing-base.module';
 
 @Component({
   selector: 'app-root',
