@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CarSharingBaseModule } from './car-sharing-base.module';
 
 import { Vehicle } from './models/vehicle'
+import { Bus } from './models/vehicles/bus'
 import { VehicleType } from './models/enums/vehicle-type'
 
 @Component({
@@ -14,7 +15,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     console.log("test");
-    let veh = new Vehicle();
+    let veh = new Bus();
     veh.vehicleType = VehicleType.Bus;
     veh.licensePlate = "STA 13579";
     veh.yearOfProduction = 1410;

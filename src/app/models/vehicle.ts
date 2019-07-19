@@ -1,7 +1,7 @@
 import { VehicleType } from './enums/vehicle-type';
 import { HookType } from './enums/hook-type';
 
-export class Vehicle {
+export abstract class Vehicle {
   public vehicleType: VehicleType;
   public weight: number;
   public height: number;
