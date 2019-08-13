@@ -1,6 +1,6 @@
 export enum VehicleType {
   PassengerCar,
-  Track,
+  Truck,
   Bus,
   Motorcycle
 }

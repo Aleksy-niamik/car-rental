@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CarFormComponent } from './car-formt.component';
+import { CarFormComponent } from './car-form.component';
 
 describe('CarFormComponent', () => {
   let component: CarFormComponent;
