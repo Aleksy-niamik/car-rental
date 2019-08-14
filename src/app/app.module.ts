@@ -11,6 +11,9 @@ import { ClientListComponent } from './components-car-sharing-base/smaller-compo
 import { LoanFormComponent } from './components-car-sharing-base/smaller-components/loan-form/loan-form.component';
 import { LoanListComponent } from './components-car-sharing-base/smaller-components/loan-list/loan-list.component';
 import { CarListComponent } from './components-car-sharing-base/smaller-components/car-list/car-list.component';
+import { VehicleRepository } from './repositories/vehicle.repository';
+import { TrailerRepository } from './repositories/trailer.repository';
+import { Seed } from './seed/seed-data';
 
 
 
@@ -32,7 +35,11 @@ const APP_ROUTES: Routes = [
     CarSharingBaseModule,
     RouterModule.forRoot( APP_ROUTES )
   ],
-  providers: [],
+  providers: [
+    {provide: Seed, useClass: Seed},
+    {provide: VehicleRepository, useClass: VehicleRepository},
+    {provide: TrailerRepository, useClass: TrailerRepository}
+  ],
   bootstrap: [AppComponent]
 })
 
