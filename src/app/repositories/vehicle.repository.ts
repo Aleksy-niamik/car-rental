@@ -6,4 +6,8 @@ export class VehicleRepository extends Repository<Vehicle> {
     public getByVehicleType(type: VehicleType): Vehicle[] {
         return this.items.filter(s => s.vehicleType == type);
     }
+
+    public getName(): string {
+        return 'vehicle repository';
+    }
 }

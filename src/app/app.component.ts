@@ -14,6 +14,11 @@ import { Repository } from './repositories/repository';
 import { VehicleRepository } from './repositories/vehicle.repository';
 import { TrailerRepository } from './repositories/trailer.repository';
 import { Seed } from './seed/seed-data';
+import { LoggerService } from './services/logger.service';
+import { LendService } from './services/lend.service';
+import { VehicleService } from './services/vehicle.service';
+import { FinishLendService } from './services/finish-lend';
+import { BaseService } from './services/base.service';
 
 @Injectable()
 @Component({
@@ -25,8 +30,13 @@ export class AppComponent implements OnInit{
   title = 'car-rental';
   // public vehicleRepository: VehicleRepository;
 
-  constructor(private readonly vehicleRepository: VehicleRepository, private readonly trailerRepository: TrailerRepository, private seed: Seed) {
-    // this.vehicleRepository = _vehicleRepository;
+  constructor(
+      private readonly vehicleRepository: VehicleRepository,
+      private readonly trailerRepository: TrailerRepository,
+      private seed: Seed){
+     // private loggerService: LoggerService,
+//private lendService: LendService) {
+
   }
 
   ngOnInit() {
@@ -46,10 +56,36 @@ export class AppComponent implements OnInit{
     let truck = truckFactory.create("Ciężarudka");
     this.vehicleRepository.add(truck);
 
-    console.log(this.vehicleRepository);
+   /* console.log(this.vehicleRepository);
     console.log(this.trailerRepository);
     this.seed.seedData();
     console.log(this.trailerRepository);
+    */
+
+    let innyBus: Bus = busFactory.create("Inny Balobus");
+    
+    let vehicleService: VehicleService = new VehicleService(this.vehicleRepository);
+    let loggerServiceAdding = new LoggerService(vehicleService);
+    vehicleService.adding.action(innyBus);
+
+    let lendService: LendService = new LendService();
+    let loggerService = new LoggerService(lendService);
+    lendService.action(this.vehicleRepository.getAll()[0]);
+
+    let finishLendService: FinishLendService = new FinishLendService();
+    let loggerService2 = new LoggerService(finishLendService);
+    finishLendService.action(this.vehicleRepository.getAll()[0]);
+
+    console.table(this.vehicleRepository.getAll());
+
+    vehicleService.deleting.action(innyBus);
+
+    console.table(this.vehicleRepository.getAll());
+
+
+  
+
+
 
 
   }

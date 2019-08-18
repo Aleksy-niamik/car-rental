@@ -6,4 +6,8 @@ export class TrailerRepository extends Repository<Trailer> {
     public getByHookType(type: HookType): Trailer[] {
         return this.items.filter(s => s.hookType == type);
     }
+
+    public getName(): string {
+        return 'trailer repository';
+    }
 }

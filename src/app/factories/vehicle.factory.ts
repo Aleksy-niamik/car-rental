@@ -3,6 +3,7 @@ import { Vehicle } from '../models/vehicle';
 import { Utils } from '../utils/utils';
 import { HookType } from '../models/enums/hook-type';
 import { Brand } from '../models/brand';
+import { LendStatus } from '../models/enums/lend-status';
 
 export abstract class VehicleFactory {
     private vehicleType: VehicleType;
@@ -31,6 +32,8 @@ export abstract class VehicleFactory {
         vehicle.passengersCount = this.getPassengersCountsTable()[Utils.getRandomDigit(0,this.getPassengersCountsTable().length-1)];
         this.getRandomBrandAndModel(vehicle);
         vehicle.hookType = this.getRandomHookType();
+
+        vehicle.lendStatus = LendStatus.ReadyToBorrow;
     }
 
     private getRandomLicensePlate(): string {

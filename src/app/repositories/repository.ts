@@ -1,4 +1,6 @@
-export class Repository<T> {
+import { INameable } from '../interfaces/INameable';
+
+export abstract class Repository<T> implements INameable{
     protected items: T[] = [];
     
     public getAll(): T[] {
@@ -13,4 +15,6 @@ export class Repository<T> {
          this.items.splice(this.items.indexOf(item),1);
          return item;
     }
+
+    public abstract getName(): string;
 }

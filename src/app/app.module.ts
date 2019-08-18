@@ -14,6 +14,8 @@ import { CarListComponent } from './components-car-sharing-base/smaller-componen
 import { VehicleRepository } from './repositories/vehicle.repository';
 import { TrailerRepository } from './repositories/trailer.repository';
 import { Seed } from './seed/seed-data';
+import { LoggerService } from './services/logger.service';
+import { LendService } from './services/lend.service';
 
 
 
@@ -38,7 +40,9 @@ const APP_ROUTES: Routes = [
   providers: [
     {provide: Seed, useClass: Seed},
     {provide: VehicleRepository, useClass: VehicleRepository},
-    {provide: TrailerRepository, useClass: TrailerRepository}
+    {provide: TrailerRepository, useClass: TrailerRepository}//,
+    //{provide: LoggerService, useClass: LoggerService},
+    //{provide: LendService, useClass: LendService}
   ],
   bootstrap: [AppComponent]
 })
