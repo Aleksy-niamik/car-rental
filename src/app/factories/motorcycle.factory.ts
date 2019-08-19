@@ -4,7 +4,9 @@ import { Utils } from '../utils/utils';
 import { Brand } from '../models/brand';
 import { HookType } from '../models/enums/hook-type';
 import { Motorcycle } from '../models/vehicles/motorcycle';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class MotorcycleFactory extends VehicleFactory {
     constructor() {
         super(VehicleType.Motorcycle);

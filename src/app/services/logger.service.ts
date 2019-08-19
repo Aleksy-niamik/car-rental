@@ -1,11 +1,9 @@
-import { ILendable } from '../interfaces/ILendable';
-import { VehicleService } from './vehicle.service';
-import { Service } from './service';
 import { ILoggable } from '../interfaces/ILoggable';
+import { Injectable } from '@angular/core';
 
 export class LoggerService {
-    constructor(private service: ILoggable) {
-        this.service.onAfterAction().subscribe(l => this.log(service.getMessage(l)));
+    constructor(private services: ILoggable[]) {
+        services.forEach(service => service.onAfterAction().subscribe(l => this.log(service.getMessage(l))));
     }
     
     public log(message: string): void {

@@ -13,6 +13,6 @@ export class DeletingService<T extends INameable> extends Service<T> implements 
     }
 
     public getMessage(object: T): string {
-        return `Deleted an ${object.getName()} object from ${this.repository.getName()} repository.`;
+        return `Deleted the ${object.getName()} object from ${this.repository.getName()} repository.`;
     }
 }

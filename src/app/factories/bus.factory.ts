@@ -3,9 +3,10 @@ import { VehicleType } from '../models/enums/vehicle-type';
 import { Bus } from '../models/vehicles/bus';
 import { Utils } from '../utils/utils';
 import { HookType } from '../models/enums/hook-type';
-import { Vehicle } from '../models/vehicle';
 import { Brand } from '../models/brand';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class BusFactory extends VehicleFactory {
     constructor() {
         super(VehicleType.Bus);

@@ -4,46 +4,36 @@ import { MotorcycleFactory } from '../factories/motorcycle.factory';
 import { BusFactory } from '../factories/bus.factory';
 import { TruckFactory } from '../factories/truck.factory';
 import { TrailerFactory } from '../factories/trailer.factory';
-import { VehicleRepository } from '../repositories/vehicle.repository';
-import { TrailerRepository } from '../repositories/trailer.repository';
+import { VehicleService } from '../services/vehicle.service';
+import { TrailerService } from '../services/trailer.service';
 
 @Injectable()
-export class Seed {
-    private passengerCarFactory: PassengerCarFactory;
-    private motorcycleFactory: MotorcycleFactory;
-    private busFactory: BusFactory;
-    private truckFactory: TruckFactory;
-    private trailerFactory: TrailerFactory;
-    
-    constructor(private readonly vehicleRepository: VehicleRepository, private readonly trailerRepository: TrailerRepository) {
-        this.passengerCarFactory = new PassengerCarFactory();
-        this.motorcycleFactory = new MotorcycleFactory();
-        this.busFactory = new BusFactory();
-        this.truckFactory = new TruckFactory();
-        this.trailerFactory = new TrailerFactory();
+export class Seed {    
+    constructor(
+        private readonly vehicleService: VehicleService,
+        private readonly trailerService: TrailerService,
+        private busFactory: BusFactory,
+        private motorcycleFactory: MotorcycleFactory,
+        private passengerCarFactory: PassengerCarFactory,
+        private truckFactory: TruckFactory,
+        private trailerFactory: TrailerFactory) {
+
     }
 
     public seedData(): void {
         this.seedTrailers();
+        this.seedVehicles();
     }
 
-    // private seedShips(): void {
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Alpha"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Beta"));
-    //     this.vehicleRepository.add(this.battleShipFactory.create("Battle 1"));
-    //     this.vehicleRepository.add(this.battleShipFactory.create("Battle 2"));
-    //     this.vehicleRepository.add(this.battleShipFactory.create("Battle 3"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Charlie"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Alpha 2"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Beta 2"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Charlie 2"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Alpha 3"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Beta 3"));
-    //     this.vehicleRepository.add(this.patrolShipFactory.create("Patrol Charlie 3"));
-    // }
+    private seedVehicles(): void {
+        this.vehicleService.adding.action(this.busFactory.create("Balobus"));
+        this.vehicleService.adding.action(this.passengerCarFactory.create("Szczwanochód"));
+        this.vehicleService.adding.action(this.motorcycleFactory.create("Motorud"));
+        this.vehicleService.adding.action(this.truckFactory.create("Ciężarudka"));
+    }
 
     private seedTrailers(): void {
         for(let i=0; i<5; i++)
-            this.trailerRepository.add(this.trailerFactory.create());
+            this.trailerService.adding.action(this.trailerFactory.create());
     }
 }

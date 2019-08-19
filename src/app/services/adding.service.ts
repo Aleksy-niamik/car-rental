@@ -13,6 +13,6 @@ export class AddingService<T extends INameable> extends Service<T> implements IL
     }
 
     public getMessage(object: T): string {
-        return `Added an ${object.getName()} object to the ${this.repository.getName()}.`;
+        return `Added the ${object.getName()} object to the ${this.repository.getName()}.`;
     }
 }

@@ -2,7 +2,9 @@ import { Trailer } from '../models/trailer';
 import { Utils } from '../utils/utils';
 import { HookType } from '../models/enums/hook-type';
 import { LendStatus } from '../models/enums/lend-status';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class TrailerFactory {
     public create(): Trailer {
         let trailer = new Trailer();

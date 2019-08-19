@@ -19,6 +19,8 @@ import { LendService } from './services/lend.service';
 import { VehicleService } from './services/vehicle.service';
 import { FinishLendService } from './services/finish-lend';
 import { BaseService } from './services/base.service';
+import { TrailerFactory } from './factories/trailer.factory';
+import { TrailerService } from './services/trailer.service';
 
 @Injectable()
 @Component({
@@ -28,65 +30,34 @@ import { BaseService } from './services/base.service';
 })
 export class AppComponent implements OnInit{
   title = 'car-rental';
-  // public vehicleRepository: VehicleRepository;
+  private loggerService: LoggerService;
 
   constructor(
       private readonly vehicleRepository: VehicleRepository,
       private readonly trailerRepository: TrailerRepository,
-      private seed: Seed){
-     // private loggerService: LoggerService,
-//private lendService: LendService) {
+      private seed: Seed,
+      private busFactory: BusFactory,
+      private motorcycleFactory: MotorcycleFactory,
+      private passengerCarFactory: PassengerCarFactory,
+      private truckFactory: TruckFactory,
+      private trailerFactory: TrailerFactory,
+      private vehicleService: VehicleService,
+      private trailerService: TrailerService, 
+      private lendService: LendService,
+      private finishLendService: FinishLendService) {
+
+        this.loggerService = new LoggerService([lendService, finishLendService, vehicleService, trailerService]);
 
   }
 
   ngOnInit() {
-    let busFactory = new BusFactory();
-    let bus = busFactory.create("Balobus");
-    this.vehicleRepository.add(bus);
-
-    let passengerCarFactory = new PassengerCarFactory();
-    let passengerCar = passengerCarFactory.create("Szczwanochód");
-    this.vehicleRepository.add(passengerCar);
-
-    let motorcycleFactory = new MotorcycleFactory();
-    let motorcycle = motorcycleFactory.create("Motorud");
-    this.vehicleRepository.add(motorcycle);
-    
-    let truckFactory = new TruckFactory();
-    let truck = truckFactory.create("Ciężarudka");
-    this.vehicleRepository.add(truck);
-
-   /* console.log(this.vehicleRepository);
-    console.log(this.trailerRepository);
     this.seed.seedData();
-    console.log(this.trailerRepository);
-    */
 
-    let innyBus: Bus = busFactory.create("Inny Balobus");
-    
-    let vehicleService: VehicleService = new VehicleService(this.vehicleRepository);
-    let loggerServiceAdding = new LoggerService(vehicleService);
-    vehicleService.adding.action(innyBus);
+    this.lendService.action(this.vehicleRepository.getAll()[0]);
 
-    let lendService: LendService = new LendService();
-    let loggerService = new LoggerService(lendService);
-    lendService.action(this.vehicleRepository.getAll()[0]);
-
-    let finishLendService: FinishLendService = new FinishLendService();
-    let loggerService2 = new LoggerService(finishLendService);
-    finishLendService.action(this.vehicleRepository.getAll()[0]);
+    this.finishLendService.action(this.vehicleRepository.getAll()[0]);
 
     console.table(this.vehicleRepository.getAll());
-
-    vehicleService.deleting.action(innyBus);
-
-    console.table(this.vehicleRepository.getAll());
-
-
-  
-
-
-
-
+    console.table(this.trailerRepository.getAll());
   }
 }

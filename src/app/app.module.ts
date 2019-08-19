@@ -16,6 +16,14 @@ import { TrailerRepository } from './repositories/trailer.repository';
 import { Seed } from './seed/seed-data';
 import { LoggerService } from './services/logger.service';
 import { LendService } from './services/lend.service';
+import { BusFactory } from './factories/bus.factory';
+import { MotorcycleFactory } from './factories/motorcycle.factory';
+import { PassengerCarFactory } from './factories/passenger-car.factory';
+import { TruckFactory } from './factories/truck.factory';
+import { TrailerFactory } from './factories/trailer.factory';
+import { FinishLendService } from './services/finish-lend';
+import { VehicleService } from './services/vehicle.service';
+import { TrailerService } from './services/trailer.service';
 
 
 
@@ -38,11 +46,18 @@ const APP_ROUTES: Routes = [
     RouterModule.forRoot( APP_ROUTES )
   ],
   providers: [
+    {provide: BusFactory, useClass: BusFactory},
+    {provide: MotorcycleFactory, useClass: MotorcycleFactory},
+    {provide: PassengerCarFactory, useClass: PassengerCarFactory},
+    {provide: TruckFactory, useClass: TruckFactory},
+    {provide: TrailerFactory, useClass: TrailerFactory},
     {provide: Seed, useClass: Seed},
     {provide: VehicleRepository, useClass: VehicleRepository},
-    {provide: TrailerRepository, useClass: TrailerRepository}//,
-    //{provide: LoggerService, useClass: LoggerService},
-    //{provide: LendService, useClass: LendService}
+    {provide: TrailerRepository, useClass: TrailerRepository},
+    {provide: LendService, useClass: LendService},
+    {provide: FinishLendService, useClass: FinishLendService},
+    {provide: VehicleService, useClass: VehicleService},
+    {provide: TrailerService, useClass: TrailerService}
   ],
   bootstrap: [AppComponent]
 })

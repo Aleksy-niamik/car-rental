@@ -2,10 +2,11 @@ import { VehicleFactory } from './vehicle.factory';
 import { VehicleType } from '../models/enums/vehicle-type';
 import { Utils } from '../utils/utils';
 import { HookType } from '../models/enums/hook-type';
-import { Vehicle } from '../models/vehicle';
 import { Brand } from '../models/brand';
 import { PassengerCar } from '../models/vehicles/passenger-car';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class PassengerCarFactory extends VehicleFactory {
     constructor() {
         super(VehicleType.PassengerCar);
