@@ -16,6 +16,7 @@ import { DesktopComponent } from './components-car-sharing-base/smaller-componen
 import { LoanDetailsComponent } from './components-car-sharing-base/smaller-components/loan-details/loan-details.component';
 import { LoanFormComponent } from './components-car-sharing-base/smaller-components/loan-form/loan-form.component';
 import { LoanListComponent } from './components-car-sharing-base/smaller-components/loan-list/loan-list.component';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { LoanListComponent } from './components-car-sharing-base/smaller-compone
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
     AppRoutingModule
   ],
   exports: [

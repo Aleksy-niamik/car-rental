@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DataTablesModule } from 'angular-datatables';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CarSharingBaseModule } from './car-sharing-base.module';
@@ -41,6 +42,7 @@ const APP_ROUTES: Routes = [
   ],
   imports: [
     BrowserModule,
+    DataTablesModule,
     AppRoutingModule,
     CarSharingBaseModule,
     RouterModule.forRoot( APP_ROUTES )
