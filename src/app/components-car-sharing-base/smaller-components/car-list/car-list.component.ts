@@ -13,17 +13,30 @@ import { VehicleRepository } from 'src/app/repositories/vehicle.repository';
   styleUrls: ['./car-list.component.css']
 })
 export class CarListComponent implements OnInit {
-  public dtOptions: DataTables.Settings = {};
+  private dtOptions: DataTables.Settings = {};
   public dtTrigger: Subject<void> = new Subject<void>();
-  public dtInstance: DataTables.Api;
+  //public dtInstance: DataTables.Api;
+  public vehicles: Vehicle[];
 
-  @ViewChild( DataTableDirective, {static: false})
-  dataTableElement: DataTableDirective;
+  //@ViewChild( DataTableDirective, {static: false})
+  //dataTableElement: DataTableDirective;
   
   constructor( private vehicleRepository: VehicleRepository) {  }
 
   ngOnInit() {
-    this.initTable();
+    this.dtOptions = {
+      pagingType: 'full_numbers'
+    };
+    this.vehicles = this.vehicleRepository.getAll();
+    
+  }
+
+  ngAfterViewInit() {
+    this.dtTrigger.next();
+  }
+
+  ngOnDestroy() {
+    this.dtTrigger.unsubscribe();
   }
 
   private setTableOptions(): void {
@@ -51,10 +64,10 @@ private async initTable(): Promise<void> {
   this.setTableOptions();
   this.dtOptions.data = this.vehicleRepository.getAll();
 
-  this.dataTableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-    dtInstance.destroy();
-    this.dtTrigger.next();
-  });
+  //this.dataTableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+  //  dtInstance.destroy();
+   // this.dtTrigger.next();
+  //});
   //this.dtInstance = await this.dataTableElement.dtInstance;
   //this.dtTrigger.next();
 }
