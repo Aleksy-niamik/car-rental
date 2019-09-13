@@ -1,5 +1,4 @@
 import { BaseService } from './base.service';
-import { Vehicle } from '../models/vehicle';
 import { Injectable } from '@angular/core';
 import { Trailer } from '../models/trailer';
 import { TrailerRepository } from '../repositories/trailer.repository';

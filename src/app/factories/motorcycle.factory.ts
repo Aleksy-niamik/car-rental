@@ -23,7 +23,7 @@ export class MotorcycleFactory extends VehicleFactory {
     }
 
     protected getMaxEngineCapacity(): number {
-        return 4;
+        return 3;
     }
     protected getMinEngineCapacity(): number {
         return 0.1;

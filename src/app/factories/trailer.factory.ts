@@ -13,6 +13,7 @@ export class TrailerFactory {
         trailer.tiresCount = Utils.getRandomDigitExtra(2,2,4);
 
         trailer.lendStatus = LendStatus.ReadyToBorrow;
+        trailer.price = Utils.getRandomDigitExtra(100,200,6000);
 
         return trailer;
     }

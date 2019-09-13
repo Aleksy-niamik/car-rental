@@ -1,0 +1,10 @@
+<div id="container">
+  <div class = "table">
+    <trailer-list (onTrailerSelected)="trailerSelected($event)"></trailer-list>
+  </div>
+  
+  <div class = "details" *ngIf="selectedTrailer != undefined">
+    <trailer-details [displayedTrailer]="selectedTrailer" (onClose) = "close()"></trailer-details>
+  </div>
+  <div style="clear:both;"></div>
+</div>

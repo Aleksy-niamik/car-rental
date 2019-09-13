@@ -18,6 +18,7 @@ export abstract class Vehicle implements ILendable{
   public hookType: HookType;
 
   public lendStatus: LendStatus;
+  public price: number;
   public getName(): string {
     return this.name;
   }

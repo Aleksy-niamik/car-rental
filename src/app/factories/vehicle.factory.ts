@@ -34,6 +34,7 @@ export abstract class VehicleFactory {
         vehicle.hookType = this.getRandomHookType();
 
         vehicle.lendStatus = LendStatus.ReadyToBorrow;
+        vehicle.price = Utils.getRandomDigitExtra(100,500,90000);
     }
 
     private getRandomLicensePlate(): string {

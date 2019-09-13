@@ -1,0 +1,25 @@
+<div id="container">
+  <div id = "content" [ngSwitch]="displayedVehicle.vehicleType">
+    {{displayedVehicle.name}} <br/>
+    {{getVehicleType(displayedVehicle.vehicleType)}} <br/>
+    weight: {{displayedVehicle.weight}} <br/>
+    licensePlate: {{displayedVehicle.licensePlate}} <br/>
+    passengers count: {{displayedVehicle.passengersCount}} <br/>
+    year of production: {{displayedVehicle.yearOfProduction}} <br/>
+    travelled Kilometers: {{displayedVehicle.travelledKilometers}} <br/>
+    engine capacity: {{displayedVehicle.engineCapacity}} dm<sup>3</sup><br/>
+    engine power: {{displayedVehicle.enginePowerInkW}} kW <br/>
+    brand & model: {{displayedVehicle.brand + " " + displayedVehicle.model}} <br/>
+    <bus-details *ngSwitchCase="vehicleType.Bus" [selectedVehicle]="displayedVehicle"></bus-details>
+    <passenger-car-details *ngSwitchCase="vehicleType.PassengerCar" [selectedVehicle]="displayedVehicle"></passenger-car-details>
+    <truck-details *ngSwitchCase="vehicleType.Truck" [selectedVehicle]="displayedVehicle"></truck-details>
+    <motorcycle-details *ngSwitchCase="vehicleType.Motorcycle" [selectedVehicle]="displayedVehicle"></motorcycle-details>
+    <br/>
+    The vehicle is {{getLendStatus(displayedVehicle.lendStatus)}} 
+    {{displayedVehicle.lendStatus == 0 ? 'in price of ' + displayedVehicle.price:''}}$.
+  </div>
+  <div id = "x" (click) = "close()">
+    &times;
+  </div>
+</div>
+

@@ -11,7 +11,7 @@ import { DesktopComponent } from './components-car-sharing-base/smaller-componen
 import { ClientListComponent } from './components-car-sharing-base/smaller-components/client-list/client-list.component';
 import { LoanFormComponent } from './components-car-sharing-base/smaller-components/loan-form/loan-form.component';
 import { LoanListComponent } from './components-car-sharing-base/smaller-components/loan-list/loan-list.component';
-import { CarListComponent } from './components-car-sharing-base/smaller-components/car-list/car-list.component';
+import { CarListComponent } from './components-car-sharing-base/smaller-components/car-list-container/car-list/car-list.component';
 import { VehicleRepository } from './repositories/vehicle.repository';
 import { TrailerRepository } from './repositories/trailer.repository';
 import { Seed } from './seed/seed-data';
@@ -25,15 +25,19 @@ import { TrailerFactory } from './factories/trailer.factory';
 import { FinishLendService } from './services/finish-lend';
 import { VehicleService } from './services/vehicle.service';
 import { TrailerService } from './services/trailer.service';
+import { CarListContainerComponent } from './components-car-sharing-base/smaller-components/car-list-container/car-list-container.component';
+import { TrailerListContainerComponent } from './components-car-sharing-base/smaller-components/trailer-list-container/trailer-list-container.component';
+import { PriceListComponent } from './components-car-sharing-base/smaller-components/price-list/price-list.component';
 
 
 
 const APP_ROUTES: Routes = [
-  { path: 'client-list',   component: ClientListComponent},
-  { path: 'desktop',    component: DesktopComponent},
-  { path: 'car-list',    component: CarListComponent},
+  { path: 'client-list',  component: ClientListComponent},
+  { path: 'desktop',      component: DesktopComponent},
+  { path: 'car-list',     component: CarListContainerComponent},
   { path: 'loan-list',    component: LoanListComponent},
-  { path: 'loan-form',    component: LoanFormComponent}
+  { path: 'price-list',   component: PriceListComponent},
+  { path: 'trailer-list', component: TrailerListContainerComponent}
 ];
 
 @NgModule({

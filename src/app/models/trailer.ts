@@ -8,6 +8,7 @@ export class Trailer implements ILendable {
   public hookType: HookType;
 
   public lendStatus: LendStatus;
+  public price: number;
   public getName(): string {
     return "przyczepa jakaś tam";
   }

@@ -1,0 +1,14 @@
+<div id="container">
+  <div id = "content">
+    This trailer has {{displayedTrailer.tiresCount}} tires. <br/>
+    Max overload is {{displayedTrailer.maxOverload}} kg <br/>
+    and has got a {{getHookType(displayedTrailer.hookType)}} hook. <br/>
+
+    The trailer is {{getLendStatus(displayedTrailer.lendStatus)}}
+    {{displayedTrailer.lendStatus == 0 ? 'in price of ' + displayedTrailer.price:''}}$.
+  </div>
+  <div id = "x" (click) = "close()">
+    &times;
+  </div>
+</div>
+

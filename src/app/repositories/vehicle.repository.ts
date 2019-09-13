@@ -9,6 +9,10 @@ export class VehicleRepository extends Repository<Vehicle> {
         return this.items.filter(s => s.vehicleType == type);
     }
 
+    public getOrderedByPriceDescending(): Vehicle[] {
+        return this.items.sort((a: Vehicle, b: Vehicle) => a.price - b.price);
+    }
+
     public getName(): string {
         return 'vehicle repository';
     }

@@ -1,0 +1,22 @@
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+  <thead>
+    <tr>
+      <th>hookType</th>
+      <th>maxOverload</th>
+      <th>tiresCount</th>
+      <th>price</th>
+      <th>lendStatus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let trailer of trailers"
+      [ngClass]="{'checked': selectedTrailer == undefined ? false : (trailer.name == selectedTrailer.name)}"
+      (click)="onRowClicked(trailer)">
+        <td>{{getHookType(trailer.hookType)}}</td>
+        <td>{{trailer.maxOverload}}</td>
+        <td>{{trailer.tiresCount}}</td>
+        <td>{{trailer.price}}</td>
+        <td>{{getLendStatus(trailer.lendStatus)}}</td>
+    </tr>
+  </tbody>
+</table>

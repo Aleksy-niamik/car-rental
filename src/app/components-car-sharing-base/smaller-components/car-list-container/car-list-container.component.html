@@ -1,0 +1,10 @@
+<div id="container">
+  <div class = "table">
+    <car-list (onVehicleSelected)="vehicleSelected($event)"></car-list>
+  </div>
+  
+  <div class = "details" *ngIf="selectedVehicle != undefined" [ngClass]="classes">
+    <car-details [displayedVehicle]="selectedVehicle" (onClose) = "close()"></car-details>
+  </div>
+  <div style="clear:both;"></div>
+</div>

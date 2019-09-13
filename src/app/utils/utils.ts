@@ -1,4 +1,7 @@
 import { IfStmt } from '@angular/compiler';
+import { VehicleType } from '../models/enums/vehicle-type';
+import { HookType } from '../models/enums/hook-type';
+import { LendStatus } from '../models/enums/lend-status';
 
 export class Utils {
     public static getRandomDigit(from: number,to: number): number{
@@ -24,4 +27,28 @@ export class Utils {
         return Math.floor(result * Math.pow(10, precision)) / Math.pow(10, precision);
     }
 
+    public static translateVehicleType(type: VehicleType): string {
+        switch(type) {
+          case VehicleType.Bus: return 'bus';
+          case VehicleType.Truck: return 'truck';
+          case VehicleType.PassengerCar: return 'passenger car';
+          case VehicleType.Motorcycle: return 'motorcycle'; 
+        }
+    }
+
+    public static translateHookType(type: HookType): string {
+        switch(type) {
+          case HookType.HeavyTruck: return 'heavy truck';
+          case HookType.Truck: return 'truck';
+          case HookType.Light: return 'light';
+        }
+    }
+
+    public static translateLendStatus(type: LendStatus): string {
+        switch(type) {
+          case LendStatus.Borrowed: return 'borrowed';
+          case LendStatus.ReadyToBorrow: return 'ready to borrow';
+          case LendStatus.Unavailable: return 'unavailable to lend';
+        }
+    }
 }

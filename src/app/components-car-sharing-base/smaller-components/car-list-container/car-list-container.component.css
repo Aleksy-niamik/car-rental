@@ -1,0 +1,43 @@
+.table {
+    float: left;
+    width: 94%;
+    margin: 2%;
+    background-color: #ddd;
+    padding: 1%;
+    border-radius: 10px;
+    transition: 0.5s;
+}
+
+.details {
+    float: left;
+    margin: 2%;
+    margin-left: 1%;
+    width: 29%;
+    padding: 1%;
+    background-color: #ddd;
+    border-radius: 10px;
+    position: absolute;
+    right: -33%;
+    top: 0%;
+}
+
+#container {
+    overflow: hidden;
+    position: relative;
+}
+
+.passenger-car {
+    color: red;
+}
+
+.bus {
+    color: green;
+}
+
+.truck {
+    color: blue;
+}
+
+.motorcycle {
+    color: blueviolet;
+}

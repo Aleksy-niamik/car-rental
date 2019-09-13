@@ -1,0 +1,22 @@
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>vehicleType</th>
+      <th>price</th>
+      <th>model</th>
+      <th>lendStatus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let vehicle of vehicles"
+      [ngClass]="{'checked': selectedVehicle == undefined ? false : (vehicle.name == selectedVehicle.name)}"
+      (click)="onRowClicked(vehicle)">
+        <td>{{vehicle.name}}</td>
+        <td>{{getVehicleType(vehicle.vehicleType)}}</td>
+        <td>{{vehicle.price}}</td>
+        <td>{{vehicle.brand}}<br/>{{vehicle.model}}</td>
+        <td>{{getLendStatus(vehicle.lendStatus)}}</td>
+    </tr>
+  </tbody>
+</table>
