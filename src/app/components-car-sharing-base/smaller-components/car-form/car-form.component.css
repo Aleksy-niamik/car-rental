@@ -1,0 +1,22 @@
+.form {
+    width: 90%;
+    margin: 4%;
+    padding: 1%;
+    border-radius: 30px;
+    background-color: #1155aa;
+}
+
+.form-group::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.form-group {
+    margin: 20px 35% 20px 25%;
+    width: 40%;
+}
+
+.form-group label {
+    float: right;
+}

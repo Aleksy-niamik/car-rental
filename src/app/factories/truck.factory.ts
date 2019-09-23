@@ -5,11 +5,12 @@ import { Brand } from '../models/brand';
 import { HookType } from '../models/enums/hook-type';
 import { Truck } from '../models/vehicles/truck';
 import { Injectable } from '@angular/core';
+import { VehicleRepository } from '../repositories/vehicle.repository';
 
 @Injectable()
 export class TruckFactory extends VehicleFactory {
-    constructor() {
-        super(VehicleType.Truck);
+    constructor(private vehicleRepository: VehicleRepository) {
+        super(VehicleType.Truck, vehicleRepository);
         this.fillBrandArray();
     }
 

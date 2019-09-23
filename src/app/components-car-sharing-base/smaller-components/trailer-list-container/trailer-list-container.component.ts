@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Injectable } from '@angular/core';
 import { Trailer } from 'src/app/models/trailer';
 import { TrailerListComponent } from './trailer-list/trailer-list.component';
 
@@ -16,7 +16,8 @@ export class TrailerListContainerComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+  }
 
   public trailerSelected(data: Trailer): void {
     this.selectedTrailer = data;

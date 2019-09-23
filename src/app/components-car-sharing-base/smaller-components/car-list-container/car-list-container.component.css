@@ -26,6 +26,12 @@
     position: relative;
 }
 
+#container:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
 .passenger-car {
     color: red;
 }
@@ -40,4 +46,26 @@
 
 .motorcycle {
     color: blueviolet;
+}
+
+.button {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 25px;
+    width: 100px;
+    color: white;
+    font-size: 28px;
+    text-shadow: 1px 1px black;
+    font-family: 'Comfortaa', cursive;
+    background-color: #777777;
+    border: black 3px solid;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.button:hover {
+    background-color: #555599;
 }

@@ -17,6 +17,9 @@
     <br/>
     The vehicle is {{getLendStatus(displayedVehicle.lendStatus)}} 
     {{displayedVehicle.lendStatus == 0 ? 'in price of ' + displayedVehicle.price:''}}$.
+    <div id = "actions">
+      <img src="assets/edit.svg" width="20px"/>
+    </div>
   </div>
   <div id = "x" (click) = "close()">
     &times;

@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let trailer of trailers"
-      [ngClass]="{'checked': selectedTrailer == undefined ? false : (trailer.name == selectedTrailer.name)}"
+      [ngClass]="{'checked': selectedTrailer == undefined ? false : (trailer.id == selectedTrailer.id)}"
       (click)="onRowClicked(trailer)">
         <td>{{getHookType(trailer.hookType)}}</td>
         <td>{{trailer.maxOverload}}</td>

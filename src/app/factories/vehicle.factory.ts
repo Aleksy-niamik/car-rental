@@ -4,16 +4,20 @@ import { Utils } from '../utils/utils';
 import { HookType } from '../models/enums/hook-type';
 import { Brand } from '../models/brand';
 import { LendStatus } from '../models/enums/lend-status';
+import { VehicleRepository } from '../repositories/vehicle.repository';
+import { EntityFactory } from './entity.factory';
 
-export abstract class VehicleFactory {
+export abstract class VehicleFactory extends EntityFactory{
     private vehicleType: VehicleType;
     protected brandArray: Brand[] = new Array();
 
-    constructor(_vehicleType: VehicleType) {
+    constructor(_vehicleType: VehicleType, vehicleRepository: VehicleRepository) {
+        super(vehicleRepository);
         this.vehicleType = _vehicleType;
     }
     protected fillBaseVehicleData(vehicle: Vehicle, name: string): void {
         vehicle.name = name;
+        this.giveId(vehicle);
         vehicle.weight = Utils.getRandomDigit(
             this.getMinWeight(),
             this.getMaxWeight());

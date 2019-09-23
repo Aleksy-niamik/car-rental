@@ -28,6 +28,8 @@ import { TrailerService } from './services/trailer.service';
 import { CarListContainerComponent } from './components-car-sharing-base/smaller-components/car-list-container/car-list-container.component';
 import { TrailerListContainerComponent } from './components-car-sharing-base/smaller-components/trailer-list-container/trailer-list-container.component';
 import { PriceListComponent } from './components-car-sharing-base/smaller-components/price-list/price-list.component';
+import { CarFormComponent } from './components-car-sharing-base/smaller-components/car-form/car-form.component';
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 
@@ -37,7 +39,8 @@ const APP_ROUTES: Routes = [
   { path: 'car-list',     component: CarListContainerComponent},
   { path: 'loan-list',    component: LoanListComponent},
   { path: 'price-list',   component: PriceListComponent},
-  { path: 'trailer-list', component: TrailerListContainerComponent}
+  { path: 'trailer-list', component: TrailerListContainerComponent},
+  { path: 'car-form',     component: CarFormComponent}
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './components-car-sharing-base/home/home.component';
@@ -62,7 +62,8 @@ import { PriceElementComponent } from './components-car-sharing-base/smaller-com
     BrowserModule,
     DataTablesModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
       HomeComponent,

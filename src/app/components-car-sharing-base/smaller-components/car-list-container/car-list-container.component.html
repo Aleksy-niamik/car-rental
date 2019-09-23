@@ -6,5 +6,5 @@
   <div class = "details" *ngIf="selectedVehicle != undefined" [ngClass]="classes">
     <car-details [displayedVehicle]="selectedVehicle" (onClose) = "close()"></car-details>
   </div>
-  <div style="clear:both;"></div>
 </div>
+  <div class="button"><a routerLink="/car-form" routerLinkActive="active">Add</a></div>
