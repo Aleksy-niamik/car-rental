@@ -4,7 +4,7 @@ import { LendStatus } from './enums/lend-status';
 import { ILendable } from '../interfaces/ILendable';
 import { Entity } from './entity';
 
-export abstract class Vehicle extends Entity implements ILendable{
+export abstract class Vehicle extends Entity implements ILendable {
   public vehicleType: VehicleType;
   public name: string;
   public weight: number;

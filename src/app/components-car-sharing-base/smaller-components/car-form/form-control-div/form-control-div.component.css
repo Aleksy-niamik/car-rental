@@ -1,0 +1,27 @@
+.form-group::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.form-group {
+    margin: 20px 29% 20px 21%;
+    width: 50%;
+    position: relative;
+}
+
+.form-group label {
+    float: right;
+}
+
+input.ng-untouched, select.ng-untouched {
+    background-color: blue;
+}
+
+.ranges {
+    position: absolute;
+    right: -170px;
+    width: 150px;
+    
+    
+}

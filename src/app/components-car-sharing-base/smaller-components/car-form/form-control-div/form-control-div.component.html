@@ -1,0 +1,15 @@
+<div [formGroup]="newVehicleFormGroup">
+    <div class = "form-group" [ngSwitch]="controlType">
+        <label>
+          {{ controlName }}: 
+          <input *ngSwitchCase="ControlType.Checkbox" type="checkbox" [formControlName] = "controlName" [checked]="newVehicleFormGroup.get(controlName).value"/>
+          <select *ngSwitchCase="ControlType.Select" [formControlName]="controlName">
+            <option *ngFor="let option of selectArray; index as i" [value]="i">{{option}}</option>
+          </select>
+          <input *ngSwitchDefault [type] = "ControlType[controlType]" [formControlName] = "controlName"/>
+        </label>
+        <div *ngIf="this.min != undefined || this.max != undefined" class = "ranges">
+          {{min != undefined ? '[ ' + min : '(-&infin;'}} ; {{max != undefined ? max + ' ]' : '&infin;)'}}
+        </div>
+    </div>
+</div>

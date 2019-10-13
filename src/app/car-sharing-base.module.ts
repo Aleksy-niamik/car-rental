@@ -28,6 +28,7 @@ import { TrailerDetailsComponent } from './components-car-sharing-base/smaller-c
 import { TrailerListComponent } from './components-car-sharing-base/smaller-components/trailer-list-container/trailer-list/trailer-list.component';
 import { PriceListComponent } from './components-car-sharing-base/smaller-components/price-list/price-list.component';
 import { PriceElementComponent } from './components-car-sharing-base/smaller-components/price-list/price-element/price-element.component';
+import { FormControlDivComponent } from './components-car-sharing-base/smaller-components/car-form/form-control-div/form-control-div.component';
 
 
 
@@ -56,7 +57,8 @@ import { PriceElementComponent } from './components-car-sharing-base/smaller-com
     TrailerListComponent,
     TrailerDetailsComponent,
     PriceListComponent,
-    PriceElementComponent
+    PriceElementComponent,
+    FormControlDivComponent
   ],
   imports: [
     BrowserModule,

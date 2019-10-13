@@ -12,7 +12,8 @@ import { LendStatus } from 'src/app/models/enums/lend-status';
 
 export class CarDetailsComponent implements OnInit {
   public vehicleType = VehicleType;
-  
+  public params: object;
+
   @Input()
   public displayedVehicle: Vehicle;
 
@@ -22,6 +23,7 @@ export class CarDetailsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    this.params = {id: this.displayedVehicle.id};
   }
 
   async ngAfterViewInit() {

@@ -2,6 +2,8 @@ import { IfStmt } from '@angular/compiler';
 import { VehicleType } from '../models/enums/vehicle-type';
 import { HookType } from '../models/enums/hook-type';
 import { LendStatus } from '../models/enums/lend-status';
+import { Repository } from '../repositories/repository';
+import { Entity } from '../models/entity';
 
 export class Utils {
     public static getRandomDigit(from: number,to: number): number{
@@ -50,5 +52,12 @@ export class Utils {
           case LendStatus.ReadyToBorrow: return 'ready to borrow';
           case LendStatus.Unavailable: return 'unavailable to lend';
         }
+    }
+
+    public static getFreeId(repository: Repository<Entity>): number {
+        for(let i=0; i<repository.getAll().length; i++){
+            if(repository.getAll().filter((l) => l.id==i).length == 0) return i;
+        }
+        return repository.getAll().length;
     }
 }

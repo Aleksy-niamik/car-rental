@@ -4,18 +4,19 @@ import { DeletingService } from './deleting.service';
 import { INameable } from '../interfaces/INameable';
 import { ILoggable } from '../interfaces/ILoggable';
 import { Subject, Observable } from 'rxjs';
+import { Entity } from '../models/entity';
 
-export class BaseService<T extends INameable> implements ILoggable{
-    public adding: AddingService<T>;
-    public deleting: DeletingService<T>;
+export class BaseService implements ILoggable{
+    public adding: AddingService;
+    public deleting: DeletingService;
 
-    private onAfterActionEvent: Subject<T> = new Subject<T>();
+    private onAfterActionEvent: Subject<Entity> = new Subject<Entity>();
     private message: string = '';
 
 
-    constructor(protected repository: Repository<T>) {
-        this.adding = new AddingService<T>(repository);
-        this.deleting = new DeletingService<T>(repository);
+    constructor(protected repository: Repository<Entity>) {
+        this.adding = new AddingService(repository);
+        this.deleting = new DeletingService(repository);
 
         this.adding.onAfterAction().subscribe(l => {
             this.message = this.adding.getMessage(l);
@@ -27,11 +28,11 @@ export class BaseService<T extends INameable> implements ILoggable{
         });
     }
 
-    public onAfterAction(): Observable<T> {
+    public onAfterAction(): Observable<Entity> {
         return this.onAfterActionEvent.asObservable();
     }
 
-    public getMessage(object: T): string {
+    public getMessage(object: Entity): string {
         return this.message;
     }
 
