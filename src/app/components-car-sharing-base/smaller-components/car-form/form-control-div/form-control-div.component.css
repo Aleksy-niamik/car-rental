@@ -15,13 +15,11 @@
 }
 
 input.ng-untouched, select.ng-untouched {
-    background-color: blue;
+    background-color: lightblue;
 }
 
 .ranges {
     position: absolute;
     right: -170px;
-    width: 150px;
-    
-    
+    width: 150px;  
 }

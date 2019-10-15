@@ -8,8 +8,12 @@
           </select>
           <input *ngSwitchDefault [type] = "ControlType[controlType]" [formControlName] = "controlName"/>
         </label>
-        <div *ngIf="this.min != undefined || this.max != undefined" class = "ranges">
+        <div *ngIf="(this.min != undefined || this.max != undefined) && this.info == undefined" class = "ranges">
           {{min != undefined ? '[ ' + min : '(-&infin;'}} ; {{max != undefined ? max + ' ]' : '&infin;)'}}
+        </div>
+
+        <div *ngIf="this.info != undefined" class = "ranges">
+          {{info}}
         </div>
     </div>
 </div>

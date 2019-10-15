@@ -16,6 +16,7 @@ export class FormControlDivComponent implements OnInit {
   @Input() selectArray?: string[];
   @Input() min?: string;
   @Input() max?: string; 
+  @Input() info?: string;
 
   private ControlType = ControlType;
   constructor() { }

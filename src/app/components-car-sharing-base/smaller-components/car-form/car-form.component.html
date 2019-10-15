@@ -2,10 +2,11 @@
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="name"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="vehicleType" [controlType]="ControlType.Select" [selectArray]="getEnumArray(VehicleType)"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinWeight()" [max]="template.getMaxWeight()" controlName="weight" [controlType]="ControlType.Number"></form-control-div>
-  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="licensePlate"></form-control-div>
-  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="Math.min.apply(null, this.template.getPassengersCounts())" [max]="Math.max.apply(null, this.template.getPassengersCounts())" controlName="passengersCount" [controlType]="ControlType.Number"></form-control-div>
+  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="licensePlate" info="XXX XXXXX"></form-control-div>
+  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="passengersCount" [controlType]="ControlType.Select" [selectArray]="template.getPassengersCounts()"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinYearOfProduction()" [max]="template.getMaxYearOfProduction()" controlName="yearOfProduction" [controlType]="ControlType.Number"></form-control-div>
-  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" min="0" controlName="travelledKilometers" [controlType]="ControlType.Number"></form-control-div>
+  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="travelledKilometers" info="non-negative inetegrs" [controlType]="ControlType.Number"></form-control-div>
+  <div *ngIf="newVehicleFormGroup.get('travelledKilometers').hasError('errorBal')">ERRORBAL</div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinEngineCapacity()" [max]="template.getMaxEngineCapacity()" controlName="engineCapacity" [controlType]="ControlType.Number"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinEnginePower()" [max]="template.getMaxEnginePower()" controlName="enginePowerInkW" [controlType]="ControlType.Number"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="brand" [controlType]="ControlType.Select" [selectArray]="getBrandsTable()"></form-control-div>
@@ -19,7 +20,7 @@
     <form-control-div *ngSwitchCase="1" [newVehicleFormGroup]="newVehicleFormGroup" controlName="hasBedroom" [controlType]="ControlType.Checkbox"></form-control-div>
     <form-control-div *ngSwitchCase="3" [newVehicleFormGroup]="newVehicleFormGroup" controlName="hasTrunk" [controlType]="ControlType.Checkbox"></form-control-div>
   </div>
-  <button [disabled] = "newVehicleFormGroup.invalid"(click)="onSubmit()">{{editing ? 'Edytuj' : 'Stwórz'}}</button>
+  <button [disabled] = "newVehicleFormGroup.invalid || newVehicleFormGroup.pending"(click)="onSubmit()">{{editing ? 'Edytuj' : 'Stwórz'}}</button>
 </form>
 
 //edycja pól formularza css
