@@ -4,6 +4,8 @@ import { HookType } from '../models/enums/hook-type';
 import { LendStatus } from '../models/enums/lend-status';
 import { Repository } from '../repositories/repository';
 import { Entity } from '../models/entity';
+import { Vehicle } from '../models/vehicle';
+import { Trailer } from '../models/trailer';
 
 export class Utils {
     public static getRandomDigit(from: number,to: number): number{
@@ -59,5 +61,22 @@ export class Utils {
             if(repository.getAll().filter((l) => l.id==i).length == 0) return i;
         }
         return repository.getAll().length;
+    }
+
+    public static setVehicleRandomUniqueId(vehicle: Vehicle) {
+        switch(vehicle.vehicleType) {
+            case VehicleType.Bus: vehicle.uniqueId = "BUS_"; break;
+            case VehicleType.PassengerCar: vehicle.uniqueId = "OSO_"; break;
+            case VehicleType.Truck: vehicle.uniqueId = "CIE_"; break;
+            case VehicleType.Motorcycle: vehicle.uniqueId = "MOT_"; break;
+        }
+        for(let i=0;i<6;i++)
+            vehicle.uniqueId += this.getRandomDigit(0,9);
+    }
+
+    public static setTrailerRandomUniqueId(trailer: Trailer) {
+        trailer.uniqueId = "TRA_";
+        for(let i=0;i<6;i++)
+            trailer.uniqueId += this.getRandomDigit(0,9);
     }
 }

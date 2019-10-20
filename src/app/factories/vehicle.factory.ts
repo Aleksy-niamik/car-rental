@@ -50,6 +50,7 @@ export abstract class VehicleFactory extends EntityFactory{
             this.vehicleTemplate.getMinPrice(),
             this.vehicleTemplate.getMaxPrice()
         );
+        Utils.setVehicleRandomUniqueId(vehicle);
     }
 
     private getRandomLicensePlate(): string {

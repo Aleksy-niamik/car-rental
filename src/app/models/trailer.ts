@@ -10,6 +10,7 @@ export class Trailer extends Entity implements ILendable {
 
   public lendStatus: LendStatus;
   public price: number;
+  public uniqueId: string;
   public getName(): string {
     return "przyczepa jakaś tam";
   }

@@ -30,6 +30,7 @@ export class TrailerFactory extends EntityFactory{
             this.trailerTemplate.getPriceStep(),
             this.trailerTemplate.getMinPrice(),
             this.trailerTemplate.getMaxPrice() );
+        Utils.setTrailerRandomUniqueId(trailer);
 
         return trailer;
     }
