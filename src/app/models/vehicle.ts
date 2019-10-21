@@ -20,6 +20,7 @@ export abstract class Vehicle extends Entity implements ILendable {
 
   public lendStatus: LendStatus;
   public price: number;
+  public uniqueId: string;
   public getName(): string {
     return this.name;
   }

@@ -17,12 +17,17 @@ export class FormControlDivComponent implements OnInit {
   @Input() min?: string;
   @Input() max?: string; 
   @Input() info?: string;
+  @Input() preInfo?: string;
+  @Input() required?: boolean;
+  @Input() width?: string;
 
   private ControlType = ControlType;
   constructor() { }
 
   ngOnInit() {
     if(this.controlType === undefined) this.controlType = ControlType.Text;
+    if(this.required === undefined) this.required = true;
+    if(this.width === undefined) this.width = 'initial';
   }
 
 

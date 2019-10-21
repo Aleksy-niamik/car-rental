@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
-import { FormGroup, FormControl, Validators, AsyncValidatorFn, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { VehicleRepository } from '../../../repositories/vehicle.repository';
 import { Vehicle } from '../../../models/vehicle';
 import { Bus } from '../../../models/vehicles/bus';
@@ -18,8 +18,9 @@ import { TruckTemplate } from '../../../templates/truck.template';
 import { MotorcycleTemplate } from '../../../templates/motorcycle.template';
 import { HookType } from '../../../models/enums/hook-type';
 import { Brand } from '../../../models/brand';
-import { of, timer, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators'
+import { CarFormValidators } from '../../../controllers/car-form-validators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-car-form',
@@ -30,7 +31,9 @@ export class CarFormComponent implements OnInit {
   private newVehicleFormGroup: FormGroup;
   private beingEditedVehicle: Vehicle;
   private template: VehicleTemplate;
+  private validators: CarFormValidators;
   private editing: boolean = false;
+  private preInfo: string;
 
   private subControlsTable: Array<any>;
   private ControlType = ControlType;
@@ -38,6 +41,7 @@ export class CarFormComponent implements OnInit {
   private HookType = HookType;
   private Math = Math;
   private BusTemplate = BusTemplate;
+  private LendStatus = LendStatus;
 
 
   constructor( private route: ActivatedRoute, private vehicleRepository: VehicleRepository,
@@ -46,6 +50,7 @@ export class CarFormComponent implements OnInit {
     private passengerCarTemplate: PassengerCarTemplate,
     private motorcycleTemplate: MotorcycleTemplate ) { 
     this.setSubControlstTable();
+    this.validators = new CarFormValidators(this.template, this.busTemplate);
   }
 
   private setSubControlstTable(): void {
@@ -55,6 +60,7 @@ export class CarFormComponent implements OnInit {
   ngOnInit() {
     this.setFormMode();
     this.createForm();
+    if(this.editing && this.beingEditedVehicle.lendStatus != LendStatus.ReadyToBorrow) this.newVehicleFormGroup.disable();
   }
 
   private setFormMode(): void {
@@ -77,23 +83,26 @@ export class CarFormComponent implements OnInit {
       this.editing = false;
       this.template = this.truckTemplate;
     }
+
+    this.validators.setTemplate(this.template);
   }
 
   private createForm(): void {
     this.newVehicleFormGroup = new FormGroup({
       name: new FormControl(this.beingEditedVehicle.name, Validators.required),
       vehicleType: new FormControl(this.editing ? this.beingEditedVehicle.vehicleType : VehicleType.Truck, Validators.required),
-      weight: new FormControl(this.beingEditedVehicle.weight, Validators.required, this.weightValidator()),
+      weight: new FormControl(this.beingEditedVehicle.weight, Validators.required, this.validators.weightValidator()),
       licensePlate: new FormControl(this.beingEditedVehicle.licensePlate, [ Validators.required, Validators.pattern('[A-Z]{3} [0-9A-Z]{5}') ]),
       passengersCount: new FormControl(this.template.getPassengersCounts().indexOf(this.beingEditedVehicle.passengersCount), Validators.required),
-      yearOfProduction: new FormControl(this.beingEditedVehicle.yearOfProduction, [ Validators.required, this.nonNegativeIntegerValidator(), Validators.min(this.template.getMinYearOfProduction()), Validators.max(new Date().getFullYear()) ]),
-      travelledKilometers: new FormControl(this.beingEditedVehicle.travelledKilometers, [ Validators.required, this.nonNegativeIntegerValidator() ]),
-      engineCapacity: new FormControl(this.beingEditedVehicle.engineCapacity, Validators.required, this.engineCapacityValidator()),
-      enginePowerInkW: new FormControl(this.beingEditedVehicle.enginePowerInkW, Validators.required, this.enginePowerValidator()),
+      yearOfProduction: new FormControl(this.beingEditedVehicle.yearOfProduction, [ Validators.required, this.validators.yearOfProductionValidator(), this.validators.naturalValidator() ]),
+      travelledKilometers: new FormControl(this.beingEditedVehicle.travelledKilometers, [ Validators.required, this.validators.naturalValidator() ]),
+      engineCapacity: new FormControl(this.beingEditedVehicle.engineCapacity, Validators.required, this.validators.engineCapacityValidator()),
+      enginePowerInkW: new FormControl(this.beingEditedVehicle.enginePowerInkW, Validators.required, this.validators.enginePowerValidator()),
       brand: new FormControl(this.editing ? this.template.getBrands().map(l => l.name).indexOf(this.beingEditedVehicle.brand) : 0, Validators.required),
       model: new FormControl(this.editing ? this.template.getBrands()[this.template.getBrands().map(l => l.name).indexOf(this.beingEditedVehicle.brand)].getModels().indexOf( this.beingEditedVehicle.model ) : 0, Validators.required),
       hookType: new FormControl(this.template.getHookTypes().indexOf(this.beingEditedVehicle.hookType), Validators.required),
-      price: new FormControl(this.beingEditedVehicle.price, Validators.required, this.priceValidator())
+      price: new FormControl(this.beingEditedVehicle.price, Validators.required, this.validators.priceValidator()),
+      uniqueId: new FormControl('')
     });
     if(!this.editing) this.setValues();
     this.onTypeChanged();
@@ -116,7 +125,10 @@ export class CarFormComponent implements OnInit {
       this.template.getMinEngineCapacity() : this.beingEditedVehicle.engineCapacity);
     this.newVehicleFormGroup.get('enginePowerInkW').setValue(
       (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
-      this.template.getMaxEnginePower() : this.beingEditedVehicle.enginePowerInkW);
+      this.template.getMinEnginePower() : this.beingEditedVehicle.enginePowerInkW);
+    this.newVehicleFormGroup.get('uniqueId').setValue(
+      (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
+      '' : this.beingEditedVehicle.uniqueId.substr(4));
     this.newVehicleFormGroup.get('price').setValue(
       (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
       this.template.getMinPrice() : this.beingEditedVehicle.price);
@@ -131,26 +143,23 @@ export class CarFormComponent implements OnInit {
   }
 
   private onSubmit() {
-    if(this.editing) this.onEdit();
-    else this.onCreate();
+    let vehicle: Vehicle = this.newVehicleFormGroup.getRawValue();
+    vehicle.vehicleType = Number(vehicle.vehicleType);
+    vehicle.model = this.template.getBrands()[vehicle.brand].getModels()[vehicle.model];
+    vehicle.brand = this.template.getBrands()[vehicle.brand].name;
+    vehicle.hookType = this.template.getHookTypes()[vehicle.hookType];
+    vehicle.passengersCount = this.template.getPassengersCounts()[vehicle.passengersCount];
+    vehicle.lendStatus = LendStatus.ReadyToBorrow;
+    if(!this.editing) {
+      vehicle.id = Utils.getFreeId(this.vehicleRepository);
+      this.vehicleRepository.add(vehicle);
+    }
+    else {
+      vehicle.id = this.beingEditedVehicle.id;
+      this.vehicleRepository.update(this.beingEditedVehicle, vehicle);
+      this.beingEditedVehicle = vehicle;
+    }
     console.table(this.vehicleRepository.getAll());
-  }
-
-  private onCreate() {
-    let newVehicle: Vehicle = this.newVehicleFormGroup.getRawValue();
-    newVehicle.id = Utils.getFreeId(this.vehicleRepository);
-    newVehicle.lendStatus = LendStatus.ReadyToBorrow;
-    this.vehicleRepository.add(newVehicle);
-  }
-
-  private onEdit() {
-    let editedVehicle: Vehicle;
-   // switch(Number(this.newVeh
-    editedVehicle = this.newVehicleFormGroup.getRawValue();
-    editedVehicle.vehicleType = Number(editedVehicle.vehicleType);
-    editedVehicle.lendStatus = this.beingEditedVehicle.lendStatus;
-    this.vehicleRepository.update(this.beingEditedVehicle, editedVehicle);
-    this.beingEditedVehicle = editedVehicle;
   }
 
   private onTypeChanged() {
@@ -165,24 +174,25 @@ export class CarFormComponent implements OnInit {
     {
       case VehicleType.Bus:
         this.template = this.busTemplate;
-        this.newVehicleFormGroup.get('doorsCount').setValue(this.editing ? (<Bus>this.beingEditedVehicle).doorsCount : (<BusTemplate>this.template).getMinDoorsCount());
-        this.newVehicleFormGroup.get('floorsCount').setValue(this.editing ? (<Bus>this.beingEditedVehicle).floorsCount : (<BusTemplate>this.template).getMinFloorsCount());
-        this.newVehicleFormGroup.get('doorsCount').setValidators([Validators.required, this.nonNegativeIntegerValidator(), this.doorsCountValidator()]);
-        this.newVehicleFormGroup.get('floorsCount').setValidators([Validators.required, this.nonNegativeIntegerValidator(), this.floorsCountValidator()]);
-        break;
+        this.newVehicleFormGroup.get('doorsCount').setValue((this.editing && Number(this.newVehicleFormGroup.get('vehicleType').value) == this.beingEditedVehicle.vehicleType) ? (<Bus>this.beingEditedVehicle).doorsCount : (<BusTemplate>this.template).getMinDoorsCount());
+        this.newVehicleFormGroup.get('floorsCount').setValue((this.editing && Number(this.newVehicleFormGroup.get('vehicleType').value) == this.beingEditedVehicle.vehicleType) ? (<Bus>this.beingEditedVehicle).floorsCount : (<BusTemplate>this.template).getMinFloorsCount());
+        this.newVehicleFormGroup.get('doorsCount').setValidators([ Validators.required, this.validators.naturalValidator(), this.validators.doorsCountValidator()]);
+        this.newVehicleFormGroup.get('floorsCount').setValidators([ Validators.required, this.validators.naturalValidator(), this.validators.floorsCountValidator()]);
+      break;
       case VehicleType.Truck:
           this.template = this.truckTemplate;
-          this.newVehicleFormGroup.get('hasBedroom').setValue(this.editing ? (<Truck>this.beingEditedVehicle).hasBedroom : false);
+          this.newVehicleFormGroup.get('hasBedroom').setValue((this.editing && Number(this.newVehicleFormGroup.get('vehicleType').value) == this.beingEditedVehicle.vehicleType) ? (<Truck>this.beingEditedVehicle).hasBedroom : false);
       break;
       case VehicleType.PassengerCar:
           this.template = this.passengerCarTemplate;
-          this.newVehicleFormGroup.get('hasGPS').setValue(this.editing ? (<PassengerCar>this.beingEditedVehicle).hasGPS : false);
+          this.newVehicleFormGroup.get('hasGPS').setValue((this.editing && Number(this.newVehicleFormGroup.get('vehicleType').value) == this.beingEditedVehicle.vehicleType) ? (<PassengerCar>this.beingEditedVehicle).hasGPS : false);
       break;
       case VehicleType.Motorcycle:
           this.template = this.motorcycleTemplate;
-          this.newVehicleFormGroup.get('hasTrunk').setValue(this.editing ? (<Motorcycle>this.beingEditedVehicle).hasTrunk : false);
+          this.newVehicleFormGroup.get('hasTrunk').setValue((this.editing && Number(this.newVehicleFormGroup.get('vehicleType').value) == this.beingEditedVehicle.vehicleType) ? (<Motorcycle>this.beingEditedVehicle).hasTrunk : false);
       break;
     }
+    this.validators.setTemplate(this.template);
     this.setValues();
     if(this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) {
       this.newVehicleFormGroup.get('brand').setValue(0);
@@ -216,6 +226,15 @@ export class CarFormComponent implements OnInit {
   
   private getBrandsTable(): string[] {
     return this.template.getBrands().map(l => l.name);
+  }
+
+  private getPreInfo(): string {
+    switch(Number(this.newVehicleFormGroup.get('vehicleType').value)) {
+      case VehicleType.Bus: return "BUS_"; 
+      case VehicleType.PassengerCar: return "OSO_";
+      case VehicleType.Truck: return "CIE_";
+      case VehicleType.Motorcycle: return "MOT_";
+    }
   }
 
   private getModelsTable(): string[] {

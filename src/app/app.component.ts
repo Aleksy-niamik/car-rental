@@ -55,7 +55,7 @@ export class AppComponent implements OnInit{
 
     this.lendService.action(this.vehicleRepository.getAll()[0]);
 
-    this.finishLendService.action(this.vehicleRepository.getAll()[0]);
+   // this.finishLendService.action(this.vehicleRepository.getAll()[0]);
 
     console.table(this.vehicleRepository.getAll());
     console.table(this.trailerRepository.getAll());

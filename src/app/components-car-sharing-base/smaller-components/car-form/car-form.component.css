@@ -5,3 +5,20 @@
     border-radius: 30px;
     background-color: #1155aa;
 }
+
+.warning {
+    margin-left: 20%;
+}
+
+.warning a {
+    color: black;
+}
+
+.button {
+    width: 10%;
+    margin-left: 49%;
+}
+
+button {
+    width: 100%;
+}
