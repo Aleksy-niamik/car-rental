@@ -86,7 +86,7 @@ export class CarFormComponent implements OnInit {
       weight: new FormControl(this.beingEditedVehicle.weight, Validators.required, this.weightValidator()),
       licensePlate: new FormControl(this.beingEditedVehicle.licensePlate, [ Validators.required, Validators.pattern('[A-Z]{3} [0-9A-Z]{5}') ]),
       passengersCount: new FormControl(this.template.getPassengersCounts().indexOf(this.beingEditedVehicle.passengersCount), Validators.required),
-      yearOfProduction: new FormControl(this.beingEditedVehicle.yearOfProduction, [ Validators.required, Validators.min(this.template.getMinYearOfProduction()), Validators.max(new Date().getFullYear()) ]),
+      yearOfProduction: new FormControl(this.beingEditedVehicle.yearOfProduction, [ Validators.required, this.nonNegativeIntegerValidator(), Validators.min(this.template.getMinYearOfProduction()), Validators.max(new Date().getFullYear()) ]),
       travelledKilometers: new FormControl(this.beingEditedVehicle.travelledKilometers, [ Validators.required, this.nonNegativeIntegerValidator() ]),
       engineCapacity: new FormControl(this.beingEditedVehicle.engineCapacity, Validators.required, this.engineCapacityValidator()),
       enginePowerInkW: new FormControl(this.beingEditedVehicle.enginePowerInkW, Validators.required, this.enginePowerValidator()),
@@ -167,7 +167,9 @@ export class CarFormComponent implements OnInit {
         this.template = this.busTemplate;
         this.newVehicleFormGroup.get('doorsCount').setValue(this.editing ? (<Bus>this.beingEditedVehicle).doorsCount : (<BusTemplate>this.template).getMinDoorsCount());
         this.newVehicleFormGroup.get('floorsCount').setValue(this.editing ? (<Bus>this.beingEditedVehicle).floorsCount : (<BusTemplate>this.template).getMinFloorsCount());
-      break;
+        this.newVehicleFormGroup.get('doorsCount').setValidators([Validators.required, this.nonNegativeIntegerValidator(), this.doorsCountValidator()]);
+        this.newVehicleFormGroup.get('floorsCount').setValidators([Validators.required, this.nonNegativeIntegerValidator(), this.floorsCountValidator()]);
+        break;
       case VehicleType.Truck:
           this.template = this.truckTemplate;
           this.newVehicleFormGroup.get('hasBedroom').setValue(this.editing ? (<Truck>this.beingEditedVehicle).hasBedroom : false);
@@ -253,6 +255,18 @@ export class CarFormComponent implements OnInit {
   private priceValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       return of( control.value >= this.template.getMinPrice() && control.value <= this.template.getMaxPrice() ).pipe( map( response => response ? null : {errorBal: true} ) );
+    };
+  }
+
+  private floorsCountValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return ( control.value >= this.busTemplate.getMinFloorsCount() && control.value <= this.busTemplate.getMaxFloorsCount() ) ? null : {errorBal: true};
+    };
+  }
+
+  private doorsCountValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return ( control.value >= this.busTemplate.getMinDoorsCount() && control.value <= this.busTemplate.getMaxDoorsCount() ) ? null : {errorBal: true};
     };
   }
 }
