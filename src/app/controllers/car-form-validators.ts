@@ -1,24 +1,27 @@
-import { AsyncValidatorFn, AbstractControl, ValidatorFn, ValidationErrors } from "@angular/forms";
-import { Observable, of } from "rxjs";
+import { AbstractControl, ValidatorFn, ValidationErrors } from "@angular/forms";
 import { VehicleTemplate } from "../templates/vehicle.template";
-import { map } from "rxjs/operators";
 import { BusTemplate } from "../templates/bus.template";
+import { VehicleRepository } from "../repositories/vehicle.repository";
+import { Utils } from "../utils/utils";
+import { Vehicle } from "../models/vehicle";
 
 export class CarFormValidators {
 
     private template: VehicleTemplate;
+    private beingEditedVehicle: Vehicle
 
-    constructor(_template: VehicleTemplate, private busTemplate: BusTemplate) {
+    constructor(_beingEditedVehicle: Vehicle, _template: VehicleTemplate, private busTemplate: BusTemplate, private vehicleRepository: VehicleRepository) {
         this.template = _template;
+        this.beingEditedVehicle = _beingEditedVehicle;
     }
 
     public setTemplate(_template) {
         this.template = _template;
     }
     
-    public weightValidator(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-        return of(control.value >= this.template.getMinWeight() && control.value <= this.template.getMaxWeight()).pipe( map( response => response ? null : {ranges: true} ) );
+    public weightValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+        return (control.value >= this.template.getMinWeight() && control.value <= this.template.getMaxWeight()) ? null : {ranges: true};
         };
     }
 
@@ -34,21 +37,21 @@ export class CarFormValidators {
         };
     }
     
-    public engineCapacityValidator(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-        return of( control.value >= this.template.getMinEngineCapacity() && control.value <= this.template.getMaxEngineCapacity() ).pipe( map( response => response ? null : {ranges: true} ) );
+    public engineCapacityValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+        return ( control.value >= this.template.getMinEngineCapacity() && control.value <= this.template.getMaxEngineCapacity() ) ? null : {ranges: true};
         };
     }
 
-    public enginePowerValidator(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-        return of( control.value >= this.template.getMinEnginePower() && control.value <= this.template.getMaxEnginePower() ).pipe( map( response => response ? null : {ranges: true} ) );
+    public enginePowerValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+        return ( control.value >= this.template.getMinEnginePower() && control.value <= this.template.getMaxEnginePower() ) ? null : {ranges: true};
         };
     }
 
-    public priceValidator(): AsyncValidatorFn {
-        return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-        return of( control.value >= this.template.getMinPrice() && control.value <= this.template.getMaxPrice() ).pipe( map( response => response ? null : {ranges: true} ) );
+    public priceValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+        return ( control.value >= this.template.getMinPrice() && control.value <= this.template.getMaxPrice() ) ? null : {ranges: true};
         };
     }
 
@@ -63,4 +66,10 @@ export class CarFormValidators {
         return ( control.value >= this.busTemplate.getMinDoorsCount() && control.value <= this.busTemplate.getMaxDoorsCount() ) ? null : {ranges: true};
         };
     }
+
+    public uniqueIdValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            return ( this.vehicleRepository.getAll().filter(l => l.id != this.beingEditedVehicle.id && l.uniqueId == (Utils.getPreInfo(Number(control.get('vehicleType').value)) + control.get('uniqueId').value)).length == 0 ) ? null : {uniqueId: true};
+            };
+        }
 }

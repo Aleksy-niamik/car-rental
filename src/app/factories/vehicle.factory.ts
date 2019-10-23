@@ -10,6 +10,7 @@ import { VehicleTemplate } from '../templates/vehicle.template';
 export abstract class VehicleFactory extends EntityFactory{
     private vehicleType: VehicleType;
     protected vehicleTemplate: VehicleTemplate;
+    protected vehicleRepo: VehicleRepository;
 
     constructor(_vehicleType: VehicleType,
          vehicleRepository: VehicleRepository,
@@ -17,6 +18,7 @@ export abstract class VehicleFactory extends EntityFactory{
         super(vehicleRepository);
         this.vehicleType = _vehicleType;
         this.vehicleTemplate = _vehicleTemplate;
+        this.vehicleRepo = vehicleRepository;
     }
     protected fillBaseVehicleData(vehicle: Vehicle, name: string): void {
         vehicle.name = name;
@@ -50,7 +52,7 @@ export abstract class VehicleFactory extends EntityFactory{
             this.vehicleTemplate.getMinPrice(),
             this.vehicleTemplate.getMaxPrice()
         );
-        Utils.setVehicleRandomUniqueId(vehicle);
+        vehicle.uniqueId = Utils.getNewVehicleRandomUniqueId(vehicle.vehicleType, this.vehicleRepo);
     }
 
     private getRandomLicensePlate(): string {

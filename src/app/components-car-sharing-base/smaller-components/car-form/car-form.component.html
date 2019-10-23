@@ -1,4 +1,4 @@
-<form [formGroup]="newVehicleFormGroup" class = "form">
+<form [formGroup]="newVehicleFormGroup" class = "form" (ngSubmit)="onSubmit()">
   <div *ngIf="editing && beingEditedVehicle.lendStatus !== LendStatus.ReadyToBorrow" class="warning">
     Nie możesz edytować wypożyczonego lub niedostępnego pojazdu!
     <a routerLink="/car-list" routerLinkActive="active">Przejdź do listy pojazdów</a>
@@ -9,14 +9,15 @@
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="licensePlate" info="XXX XXXXX"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="passengersCount" [controlType]="ControlType.Select" [selectArray]="template.getPassengersCounts()"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinYearOfProduction()" [max]="template.getMaxYearOfProduction()" controlName="yearOfProduction" [controlType]="ControlType.Number"></form-control-div>
-  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="travelledKilometers" info="natural numbers" [controlType]="ControlType.Number"></form-control-div>
+  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="travelledKilometers" info="Natural numbers" [controlType]="ControlType.Number"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinEngineCapacity()" [max]="template.getMaxEngineCapacity()" controlName="engineCapacity" [controlType]="ControlType.Number"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinEnginePower()" [max]="template.getMaxEnginePower()" controlName="enginePowerInkW" [controlType]="ControlType.Number"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="brand" [controlType]="ControlType.Select" [selectArray]="getBrandsTable()"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="model" [controlType]="ControlType.Select" [selectArray]="getModelsTable()"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="hookType" [controlType]="ControlType.Select" [selectArray]="getHookTypesTable()"></form-control-div>
   <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinPrice()" [max]="template.getMaxPrice()" controlName="price" [controlType]="ControlType.Number"></form-control-div>
-  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="uniqueId" [controlType]="ControlType.Number" [required]="false" [preInfo]="getPreInfo()" width="120px"></form-control-div>
+  <form-control-div [newVehicleFormGroup]="newVehicleFormGroup" controlName="uniqueId" [controlType]="ControlType.Number" [preInfo]="Utils.getPreInfo(Number(getType()))" width="120px"></form-control-div>
+  <!--button class="newUniqueId" (click)="onNewRandomUniqueIdClicked()">generate new random uniqueId</button-->
   <div [ngSwitch] = "getType()">
     <form-control-div *ngSwitchCase="2" [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinFloorsCount()" [max]="template.getMaxFloorsCount()" controlName="floorsCount" [controlType]="ControlType.Number"></form-control-div>
     <form-control-div *ngSwitchCase="2" [newVehicleFormGroup]="newVehicleFormGroup" [min]="template.getMinDoorsCount()" [max]="template.getMaxDoorsCount()" controlName="doorsCount" [controlType]="ControlType.Number"></form-control-div>
@@ -24,7 +25,6 @@
     <form-control-div *ngSwitchCase="1" [newVehicleFormGroup]="newVehicleFormGroup" controlName="hasBedroom" [controlType]="ControlType.Checkbox"></form-control-div>
     <form-control-div *ngSwitchCase="3" [newVehicleFormGroup]="newVehicleFormGroup" controlName="hasTrunk" [controlType]="ControlType.Checkbox"></form-control-div>
   </div>
-  <div class = "button">
-      <button [disabled] = "newVehicleFormGroup.disabled || newVehicleFormGroup.invalid || newVehicleFormGroup.pending" (click)="onSubmit()">{{editing ? 'Edytuj' : 'Stwórz'}}</button>
-  </div>
+  <button class = "button" type="submit" [disabled] = "newVehicleFormGroup.disabled || newVehicleFormGroup.invalid || newVehicleFormGroup.pending">{{editing ? 'Edytuj' : 'Stwórz'}}</button>
+  
 </form>

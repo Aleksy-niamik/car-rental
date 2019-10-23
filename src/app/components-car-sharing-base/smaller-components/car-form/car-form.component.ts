@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { VehicleRepository } from '../../../repositories/vehicle.repository';
 import { Vehicle } from '../../../models/vehicle';
@@ -42,15 +42,17 @@ export class CarFormComponent implements OnInit {
   private Math = Math;
   private BusTemplate = BusTemplate;
   private LendStatus = LendStatus;
+  private Utils = Utils;
+  private Number = Number;
 
 
-  constructor( private route: ActivatedRoute, private vehicleRepository: VehicleRepository,
+  constructor( private route: ActivatedRoute, private router: Router, 
+    private vehicleRepository: VehicleRepository,
     private busTemplate: BusTemplate,
     private truckTemplate: TruckTemplate,
     private passengerCarTemplate: PassengerCarTemplate,
     private motorcycleTemplate: MotorcycleTemplate ) { 
     this.setSubControlstTable();
-    this.validators = new CarFormValidators(this.template, this.busTemplate);
   }
 
   private setSubControlstTable(): void {
@@ -83,27 +85,26 @@ export class CarFormComponent implements OnInit {
       this.editing = false;
       this.template = this.truckTemplate;
     }
-
-    this.validators.setTemplate(this.template);
+    this.validators = new CarFormValidators(this.beingEditedVehicle, this.template, this.busTemplate, this.vehicleRepository);
   }
 
   private createForm(): void {
     this.newVehicleFormGroup = new FormGroup({
       name: new FormControl(this.beingEditedVehicle.name, Validators.required),
       vehicleType: new FormControl(this.editing ? this.beingEditedVehicle.vehicleType : VehicleType.Truck, Validators.required),
-      weight: new FormControl(this.beingEditedVehicle.weight, Validators.required, this.validators.weightValidator()),
+      weight: new FormControl(this.beingEditedVehicle.weight, [ Validators.required, this.validators.weightValidator() ]),
       licensePlate: new FormControl(this.beingEditedVehicle.licensePlate, [ Validators.required, Validators.pattern('[A-Z]{3} [0-9A-Z]{5}') ]),
       passengersCount: new FormControl(this.template.getPassengersCounts().indexOf(this.beingEditedVehicle.passengersCount), Validators.required),
       yearOfProduction: new FormControl(this.beingEditedVehicle.yearOfProduction, [ Validators.required, this.validators.yearOfProductionValidator(), this.validators.naturalValidator() ]),
       travelledKilometers: new FormControl(this.beingEditedVehicle.travelledKilometers, [ Validators.required, this.validators.naturalValidator() ]),
-      engineCapacity: new FormControl(this.beingEditedVehicle.engineCapacity, Validators.required, this.validators.engineCapacityValidator()),
-      enginePowerInkW: new FormControl(this.beingEditedVehicle.enginePowerInkW, Validators.required, this.validators.enginePowerValidator()),
+      engineCapacity: new FormControl(this.beingEditedVehicle.engineCapacity, [ Validators.required, this.validators.engineCapacityValidator() ]),
+      enginePowerInkW: new FormControl(this.beingEditedVehicle.enginePowerInkW, [ Validators.required, this.validators.enginePowerValidator() ]),
       brand: new FormControl(this.editing ? this.template.getBrands().map(l => l.name).indexOf(this.beingEditedVehicle.brand) : 0, Validators.required),
       model: new FormControl(this.editing ? this.template.getBrands()[this.template.getBrands().map(l => l.name).indexOf(this.beingEditedVehicle.brand)].getModels().indexOf( this.beingEditedVehicle.model ) : 0, Validators.required),
       hookType: new FormControl(this.template.getHookTypes().indexOf(this.beingEditedVehicle.hookType), Validators.required),
-      price: new FormControl(this.beingEditedVehicle.price, Validators.required, this.validators.priceValidator()),
-      uniqueId: new FormControl('')
-    });
+      price: new FormControl(this.beingEditedVehicle.price, [ Validators.required, this.validators.priceValidator() ]),
+      uniqueId: new FormControl(Utils.getNewVehicleRandomUniqueId(Number(VehicleType.Truck), this.vehicleRepository).substr(4), [ Validators.pattern('[0-9]{6}'), Validators.required ])
+    }, this.validators.uniqueIdValidator());
     if(!this.editing) this.setValues();
     this.onTypeChanged();
     this.newVehicleFormGroup.get('vehicleType').valueChanges.subscribe(l => this.onTypeChanged());
@@ -126,9 +127,8 @@ export class CarFormComponent implements OnInit {
     this.newVehicleFormGroup.get('enginePowerInkW').setValue(
       (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
       this.template.getMinEnginePower() : this.beingEditedVehicle.enginePowerInkW);
-    this.newVehicleFormGroup.get('uniqueId').setValue(
-      (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
-      '' : this.beingEditedVehicle.uniqueId.substr(4));
+    if(this.newVehicleFormGroup.get('vehicleType').value == this.beingEditedVehicle.vehicleType && this.editing)
+      this.newVehicleFormGroup.get('uniqueId').setValue(this.beingEditedVehicle.uniqueId.substr(4));
     this.newVehicleFormGroup.get('price').setValue(
       (this.newVehicleFormGroup.get('vehicleType').value != this.beingEditedVehicle.vehicleType || !this.editing) ?
       this.template.getMinPrice() : this.beingEditedVehicle.price);
@@ -143,6 +143,7 @@ export class CarFormComponent implements OnInit {
   }
 
   private onSubmit() {
+    this.newVehicleFormGroup.updateValueAndValidity();
     let vehicle: Vehicle = this.newVehicleFormGroup.getRawValue();
     vehicle.vehicleType = Number(vehicle.vehicleType);
     vehicle.model = this.template.getBrands()[vehicle.brand].getModels()[vehicle.model];
@@ -150,6 +151,7 @@ export class CarFormComponent implements OnInit {
     vehicle.hookType = this.template.getHookTypes()[vehicle.hookType];
     vehicle.passengersCount = this.template.getPassengersCounts()[vehicle.passengersCount];
     vehicle.lendStatus = LendStatus.ReadyToBorrow;
+    vehicle.uniqueId = Utils.getPreInfo(vehicle.vehicleType) + vehicle.uniqueId;
     if(!this.editing) {
       vehicle.id = Utils.getFreeId(this.vehicleRepository);
       this.vehicleRepository.add(vehicle);
@@ -159,7 +161,9 @@ export class CarFormComponent implements OnInit {
       this.vehicleRepository.update(this.beingEditedVehicle, vehicle);
       this.beingEditedVehicle = vehicle;
     }
+    this.newVehicleFormGroup.updateValueAndValidity();
     console.table(this.vehicleRepository.getAll());
+    this.router.navigateByUrl("/car-list");
   }
 
   private onTypeChanged() {
@@ -213,8 +217,11 @@ export class CarFormComponent implements OnInit {
       brand.name == this.beingEditedVehicle.brand )
       this.newVehicleFormGroup.get('model').setValue(brand.getModels().indexOf(this.beingEditedVehicle.model));
     else this.newVehicleFormGroup.get('model').setValue(0);
-
   }
+
+  //private onNewRandomUniqueIdClicked() {
+    //this.newVehicleFormGroup.get('uniqueId').setValue(Utils.getNewVehicleRandomUniqueId(Number(this.getType()), this.vehicleRepository).substr(4));
+
 
   private getType(): VehicleType {
     return this.newVehicleFormGroup.get('vehicleType').value;
@@ -228,64 +235,15 @@ export class CarFormComponent implements OnInit {
     return this.template.getBrands().map(l => l.name);
   }
 
-  private getPreInfo(): string {
-    switch(Number(this.newVehicleFormGroup.get('vehicleType').value)) {
-      case VehicleType.Bus: return "BUS_"; 
-      case VehicleType.PassengerCar: return "OSO_";
-      case VehicleType.Truck: return "CIE_";
-      case VehicleType.Motorcycle: return "MOT_";
-    }
-  }
-
   private getModelsTable(): string[] {
-   if( this.editing )
-      return this.template.getBrands()[this.newVehicleFormGroup.get('brand').value].getModels();
-    else return this.template.getBrands()[0].getModels();
+    return this.template.getBrands()[this.newVehicleFormGroup.get('brand').value].getModels();
   }
 
   private getHookTypesTable(): string[] {
     return this.template.getHookTypes().map(l => HookType[l]);
   }
 
-  private weightValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      return of(control.value >= this.template.getMinWeight() && control.value <= this.template.getMaxWeight()).pipe( map( response => response ? null : {errorBal: true} ) );
-    };
-  }
-
-  private nonNegativeIntegerValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return ( Number.isInteger(Number(control.value)) && Number(control.value) >= 0 ) ? null : {errorBal: true};
-    };
-  }
-  
-  private engineCapacityValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      return of( control.value >= this.template.getMinEngineCapacity() && control.value <= this.template.getMaxEngineCapacity() ).pipe( map( response => response ? null : {errorBal: true} ) );
-    };
-  }
-
-  private enginePowerValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      return of( control.value >= this.template.getMinEnginePower() && control.value <= this.template.getMaxEnginePower() ).pipe( map( response => response ? null : {errorBal: true} ) );
-    };
-  }
-
-  private priceValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      return of( control.value >= this.template.getMinPrice() && control.value <= this.template.getMaxPrice() ).pipe( map( response => response ? null : {errorBal: true} ) );
-    };
-  }
-
-  private floorsCountValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return ( control.value >= this.busTemplate.getMinFloorsCount() && control.value <= this.busTemplate.getMaxFloorsCount() ) ? null : {errorBal: true};
-    };
-  }
-
-  private doorsCountValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      return ( control.value >= this.busTemplate.getMinDoorsCount() && control.value <= this.busTemplate.getMaxDoorsCount() ) ? null : {errorBal: true};
-    };
+  private getRandomUniqueIdButton(): string {
+    return '<button>generate new random uniqueId</button>';
   }
 }

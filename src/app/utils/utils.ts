@@ -6,6 +6,7 @@ import { Repository } from '../repositories/repository';
 import { Entity } from '../models/entity';
 import { Vehicle } from '../models/vehicle';
 import { Trailer } from '../models/trailer';
+import { VehicleRepository } from '../repositories/vehicle.repository';
 
 export class Utils {
     public static getRandomDigit(from: number,to: number): number{
@@ -63,20 +64,30 @@ export class Utils {
         return repository.getAll().length;
     }
 
-    public static setVehicleRandomUniqueId(vehicle: Vehicle) {
-        switch(vehicle.vehicleType) {
-            case VehicleType.Bus: vehicle.uniqueId = "BUS_"; break;
-            case VehicleType.PassengerCar: vehicle.uniqueId = "OSO_"; break;
-            case VehicleType.Truck: vehicle.uniqueId = "CIE_"; break;
-            case VehicleType.Motorcycle: vehicle.uniqueId = "MOT_"; break;
+    public static getPreInfo(type: VehicleType): string {
+        switch(type) {
+          case VehicleType.Bus: return "BUS_"; 
+          case VehicleType.PassengerCar: return "OSO_";
+          case VehicleType.Truck: return "CIE_";
+          case VehicleType.Motorcycle: return "MOT_";
         }
-        for(let i=0;i<6;i++)
-            vehicle.uniqueId += this.getRandomDigit(0,9);
+    }
+
+    public static getNewVehicleRandomUniqueId(type: VehicleType, repo: VehicleRepository): string {
+        let key: string, uniqueId: string;
+        key = this.getPreInfo(type);
+        do {
+            uniqueId = key;
+            for(let i=0;i<6;i++)
+                uniqueId += this.getRandomDigit(0,9);
+        } while( repo.getByVehicleType(type).filter(l => l.uniqueId == uniqueId).length != 0);
+
+        return uniqueId;        
     }
 
     public static setTrailerRandomUniqueId(trailer: Trailer) {
         trailer.uniqueId = "TRA_";
         for(let i=0;i<6;i++)
             trailer.uniqueId += this.getRandomDigit(0,9);
-    }
+    }    
 }

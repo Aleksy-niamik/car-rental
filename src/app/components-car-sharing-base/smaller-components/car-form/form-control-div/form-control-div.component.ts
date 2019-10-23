@@ -30,5 +30,7 @@ export class FormControlDivComponent implements OnInit {
     if(this.width === undefined) this.width = 'initial';
   }
 
-
+  private getName(): string {
+    return this.controlName[0].toUpperCase() + this.controlName.substr(1).replace(/InkW/g,'').replace(/[A-Z]/g, (match => " "+match));
+  }
 }
