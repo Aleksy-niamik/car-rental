@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { VehicleRepository } from '../repositories/vehicle.repository';
 
 @Injectable()
-export class VehicleService extends BaseService<Vehicle> {
+export class VehicleService extends BaseService {
     constructor(repository: VehicleRepository) {
         super(repository);
     }

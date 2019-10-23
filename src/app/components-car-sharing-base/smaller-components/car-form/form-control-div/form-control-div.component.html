@@ -1,0 +1,33 @@
+<div [formGroup]="newVehicleFormGroup">
+    <div class = "form-group" [ngSwitch]="controlType">
+        <label>
+          <div class="left">
+            {{ getName() }}
+            <div *ngIf="required && controlType != ControlType.Checkbox && controlType != ControlType.Radio" class="required">*</div>: 
+          </div>
+          <div class="right">
+              {{preInfo !== undefined ? preInfo : ''}}
+              <input *ngSwitchCase="ControlType.Checkbox" class = "input" type="checkbox" [formControlName] = "controlName" [checked]="newVehicleFormGroup.get(controlName).value"/>
+              <select *ngSwitchCase="ControlType.Select" class = "input" [formControlName]="controlName">
+                <option *ngFor="let option of selectArray; index as i" [value]="i">{{option}}</option>
+              </select>
+              <input *ngSwitchDefault class="input" [ngStyle]="{'width': width}" [type] = "ControlType[controlType]" [formControlName] = "controlName"/>    
+          </div>
+          <div style="clear: both;"></div>
+          </label>
+        <div *ngIf="(this.min != undefined || this.max != undefined) && this.info == undefined" class = "info">
+          {{min != undefined ? '[ ' + min : '(-&infin;'}} ; {{max != undefined ? max + ' ]' : '&infin;)'}}
+        </div>
+
+        <div *ngIf="this.info != undefined" class = "info">
+          {{info}}
+        </div>
+        
+        <div class = "error" *ngIf="newVehicleFormGroup.get(controlName).hasError('required') && newVehicleFormGroup.get(controlName).touched">This field is required</div>
+        <div class = "error" *ngIf="newVehicleFormGroup.get(controlName).hasError('ranges')">This value must be contained in a specific range</div>
+        <div class = "error" *ngIf="newVehicleFormGroup.get(controlName).hasError('natural')">This value must be a natural number</div>
+        <div class = "error" *ngIf="newVehicleFormGroup.get(controlName).hasError('pattern') && controlName == 'licensePlate'">This field must be a polish license plate</div>
+        <div class = "error" *ngIf="newVehicleFormGroup.get(controlName).hasError('pattern') && controlName == 'uniqueId'">The uniqueId must have 6 digits</div>
+        <div class = "error" *ngIf="newVehicleFormGroup.hasError('uniqueId') && controlName == 'uniqueId'">This uniqueId is reserved</div>
+    </div>
+</div>

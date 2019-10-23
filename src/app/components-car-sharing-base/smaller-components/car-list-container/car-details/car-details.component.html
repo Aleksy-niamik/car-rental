@@ -17,6 +17,11 @@
     <br/>
     The vehicle is {{getLendStatus(displayedVehicle.lendStatus)}} 
     {{displayedVehicle.lendStatus == 0 ? 'in price of ' + displayedVehicle.price:''}}$.
+    <div id = "actions">
+      <a routerLink="/car-form" [queryParams] = "params" routerLinkActive="active">
+        <img src="assets/edit.svg" width="20px"/>
+      </a>
+    </div>
   </div>
   <div id = "x" (click) = "close()">
     &times;

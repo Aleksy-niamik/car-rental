@@ -2,6 +2,11 @@ import { IfStmt } from '@angular/compiler';
 import { VehicleType } from '../models/enums/vehicle-type';
 import { HookType } from '../models/enums/hook-type';
 import { LendStatus } from '../models/enums/lend-status';
+import { Repository } from '../repositories/repository';
+import { Entity } from '../models/entity';
+import { Vehicle } from '../models/vehicle';
+import { Trailer } from '../models/trailer';
+import { VehicleRepository } from '../repositories/vehicle.repository';
 
 export class Utils {
     public static getRandomDigit(from: number,to: number): number{
@@ -51,4 +56,38 @@ export class Utils {
           case LendStatus.Unavailable: return 'unavailable to lend';
         }
     }
+
+    public static getFreeId(repository: Repository<Entity>): number {
+        for(let i=0; i<repository.getAll().length; i++){
+            if(repository.getAll().filter((l) => l.id==i).length == 0) return i;
+        }
+        return repository.getAll().length;
+    }
+
+    public static getPreInfo(type: VehicleType): string {
+        switch(type) {
+          case VehicleType.Bus: return "BUS_"; 
+          case VehicleType.PassengerCar: return "OSO_";
+          case VehicleType.Truck: return "CIE_";
+          case VehicleType.Motorcycle: return "MOT_";
+        }
+    }
+
+    public static getNewVehicleRandomUniqueId(type: VehicleType, repo: VehicleRepository): string {
+        let key: string, uniqueId: string;
+        key = this.getPreInfo(type);
+        do {
+            uniqueId = key;
+            for(let i=0;i<6;i++)
+                uniqueId += this.getRandomDigit(0,9);
+        } while( repo.getByVehicleType(type).filter(l => l.uniqueId == uniqueId).length != 0);
+
+        return uniqueId;        
+    }
+
+    public static setTrailerRandomUniqueId(trailer: Trailer) {
+        trailer.uniqueId = "TRA_";
+        for(let i=0;i<6;i++)
+            trailer.uniqueId += this.getRandomDigit(0,9);
+    }    
 }

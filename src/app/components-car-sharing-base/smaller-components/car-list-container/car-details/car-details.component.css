@@ -1,6 +1,20 @@
 #container {
     position: relative;
-} 
+}
+
+#actions {
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+
+#actions img {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+#actions img:hover {
+    opacity: 1;
+}
 
 #x {
     text-align: center;

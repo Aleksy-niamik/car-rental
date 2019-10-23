@@ -1,40 +1,58 @@
 import { VehicleType } from '../models/enums/vehicle-type';
 import { Vehicle } from '../models/vehicle';
 import { Utils } from '../utils/utils';
-import { HookType } from '../models/enums/hook-type';
 import { Brand } from '../models/brand';
 import { LendStatus } from '../models/enums/lend-status';
+import { VehicleRepository } from '../repositories/vehicle.repository';
+import { EntityFactory } from './entity.factory';
+import { VehicleTemplate } from '../templates/vehicle.template';
 
-export abstract class VehicleFactory {
+export abstract class VehicleFactory extends EntityFactory{
     private vehicleType: VehicleType;
-    protected brandArray: Brand[] = new Array();
+    protected vehicleTemplate: VehicleTemplate;
+    protected vehicleRepo: VehicleRepository;
 
-    constructor(_vehicleType: VehicleType) {
+    constructor(_vehicleType: VehicleType,
+         vehicleRepository: VehicleRepository,
+         _vehicleTemplate: VehicleTemplate) {
+        super(vehicleRepository);
         this.vehicleType = _vehicleType;
+        this.vehicleTemplate = _vehicleTemplate;
+        this.vehicleRepo = vehicleRepository;
     }
     protected fillBaseVehicleData(vehicle: Vehicle, name: string): void {
         vehicle.name = name;
+        this.giveId(vehicle);
         vehicle.weight = Utils.getRandomDigit(
-            this.getMinWeight(),
-            this.getMaxWeight());
+            this.vehicleTemplate.getMinWeight(),
+            this.vehicleTemplate.getMaxWeight());
         vehicle.vehicleType = this.vehicleType;
         vehicle.licensePlate = this.getRandomLicensePlate();
-        vehicle.yearOfProduction = Utils.getRandomDigit(1886, new Date().getFullYear());
+        vehicle.yearOfProduction = Utils.getRandomDigit(
+            this.vehicleTemplate.getMinYearOfProduction(),
+            this.vehicleTemplate.getMaxYearOfProduction());
         vehicle.travelledKilometers = this.getRandomTravelledKilometersNumber();
         vehicle.engineCapacity = Utils.getRandomDigitExtra(
-            this.getEngineCapacityStep(),
-            this.getMinEngineCapacity(),
-            this.getMaxEngineCapacity());
+            this.vehicleTemplate.getEngineCapacityStep(),
+            this.vehicleTemplate.getMinEngineCapacity(),
+            this.vehicleTemplate.getMaxEngineCapacity());
         vehicle.enginePowerInkW = Utils.getRandomDigitExtra(
-            this.getEnginePowerStep(),
-            this.getMinEnginePower(),
-            this.getMaxEnginePower());
-        vehicle.passengersCount = this.getPassengersCountsTable()[Utils.getRandomDigit(0,this.getPassengersCountsTable().length-1)];
+            this.vehicleTemplate.getEnginePowerStep(),
+            this.vehicleTemplate.getMinEnginePower(),
+            this.vehicleTemplate.getMaxEnginePower());
+        vehicle.passengersCount = this.vehicleTemplate.getPassengersCounts()[
+            Utils.getRandomDigit(0,this.vehicleTemplate.getPassengersCounts().length-1)];
         this.getRandomBrandAndModel(vehicle);
-        vehicle.hookType = this.getRandomHookType();
+        vehicle.hookType = this.vehicleTemplate.getHookTypes()[
+            Utils.getRandomDigit(0,this.vehicleTemplate.getHookTypes().length-1)];
 
         vehicle.lendStatus = LendStatus.ReadyToBorrow;
-        vehicle.price = Utils.getRandomDigitExtra(100,500,90000);
+        vehicle.price = Utils.getRandomDigitExtra(
+            this.vehicleTemplate.getPriceStep(),
+            this.vehicleTemplate.getMinPrice(),
+            this.vehicleTemplate.getMaxPrice()
+        );
+        vehicle.uniqueId = Utils.getNewVehicleRandomUniqueId(vehicle.vehicleType, this.vehicleRepo);
     }
 
     private getRandomLicensePlate(): string {
@@ -58,28 +76,9 @@ export abstract class VehicleFactory {
     }
 
     protected getRandomBrandAndModel(vehicle: Vehicle): void {
-        let brandNumber: number;
-        brandNumber = Utils.getRandomDigit(0,this.brandArray.length - 1);
-        vehicle.brand = this.brandArray[brandNumber].name;
-        vehicle.model = this.brandArray[brandNumber].getRandomModel();
+        let brand: Brand;
+        brand = this.vehicleTemplate.getBrands()[Utils.getRandomDigit(0,this.vehicleTemplate.getBrands().length - 1)];
+        vehicle.brand = brand.name;
+        vehicle.model = brand.getRandomModel();
     }
-
-    
-    protected getEngineCapacityStep(): number {
-        return 1;
-    }
-    protected getEnginePowerStep(): number {
-        return 1;
-    }
-
-    protected abstract getMaxWeight(): number;
-    protected abstract getMinWeight(): number;
-    protected abstract getMaxEngineCapacity(): number;
-    protected abstract getMinEngineCapacity(): number;
-    protected abstract getMaxEnginePower(): number;
-    protected abstract getMinEnginePower(): number;
-    protected abstract getRandomHookType(): HookType;
-    protected abstract fillBrandArray(): void;
-    protected abstract getPassengersCountsTable(): number[];
-
 }

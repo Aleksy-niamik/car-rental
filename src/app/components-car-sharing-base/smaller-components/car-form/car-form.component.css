@@ -1,0 +1,52 @@
+.form {
+    width: 90%;
+    margin: 4%;
+    padding: 1%;
+    border-radius: 30px;
+    border: 2px solid #003;
+    /*background-color: #3366dd;*/
+    color: #bbb;
+    font-family: 'Roboto Condensed';
+    font-size: 20px;
+}
+
+.warning {
+    margin-left: 20%;
+}
+
+.warning a {
+    color: black;
+}
+
+.button {
+    width: 20%;
+    margin-left: 44%;
+}
+
+.button {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 5px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 25px;
+    width: 20%;
+    color: white;
+    font-size: 28px;
+    text-shadow: 1px 1px black;
+    font-family: 'Comfortaa', cursive;
+    background-color: #777777;
+    border: black 3px solid;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.button:hover {
+    background-color: #555599;
+}
+
+.button:disabled {
+    background-color: #dddddd;
+    cursor: default;
+}

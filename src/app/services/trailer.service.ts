@@ -4,7 +4,7 @@ import { Trailer } from '../models/trailer';
 import { TrailerRepository } from '../repositories/trailer.repository';
 
 @Injectable()
-export class TrailerService extends BaseService<Trailer> {
+export class TrailerService extends BaseService {
     constructor(repository: TrailerRepository) {
         super(repository);
     }

@@ -28,6 +28,13 @@ import { TrailerService } from './services/trailer.service';
 import { CarListContainerComponent } from './components-car-sharing-base/smaller-components/car-list-container/car-list-container.component';
 import { TrailerListContainerComponent } from './components-car-sharing-base/smaller-components/trailer-list-container/trailer-list-container.component';
 import { PriceListComponent } from './components-car-sharing-base/smaller-components/price-list/price-list.component';
+import { CarFormComponent } from './components-car-sharing-base/smaller-components/car-form/car-form.component';
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TruckTemplate } from './templates/truck.template';
+import { BusTemplate } from './templates/bus.template';
+import { MotorcycleTemplate } from './templates/motorcycle.template';
+import { PassengerCarTemplate } from './templates/passenger-car.template';
+import { TrailerTemplate } from './templates/trailer.template';
 
 
 
@@ -37,7 +44,8 @@ const APP_ROUTES: Routes = [
   { path: 'car-list',     component: CarListContainerComponent},
   { path: 'loan-list',    component: LoanListComponent},
   { path: 'price-list',   component: PriceListComponent},
-  { path: 'trailer-list', component: TrailerListContainerComponent}
+  { path: 'trailer-list', component: TrailerListContainerComponent},
+  { path: 'car-form',     component: CarFormComponent}
 ];
 
 @NgModule({
@@ -63,7 +71,12 @@ const APP_ROUTES: Routes = [
     {provide: LendService, useClass: LendService},
     {provide: FinishLendService, useClass: FinishLendService},
     {provide: VehicleService, useClass: VehicleService},
-    {provide: TrailerService, useClass: TrailerService}
+    {provide: TrailerService, useClass: TrailerService},
+    {provide: TruckTemplate, useClass: TruckTemplate},
+    {provide: BusTemplate, useClass: BusTemplate},
+    {provide: MotorcycleTemplate, useClass: MotorcycleTemplate},
+    {provide: PassengerCarTemplate, useClass: PassengerCarTemplate},
+    {provide: TrailerTemplate, useClass: TrailerTemplate}
   ],
   bootstrap: [AppComponent]
 })
